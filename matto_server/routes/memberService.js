@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var Member = require('../model/member');
+var Toilet = require('../model/toilet');
+var Report = require('../model/report');
 var passport  = require('passport');
 
-router.post('/login',passport.authenticate('local'), function(req, res) {
+router.post('/login',passport.authrenticate('local'), function(req, res) {
 	console.log('login ok');
 	res.end('login');
 })
@@ -16,6 +18,8 @@ router.get('/logout',function (req,res) {
 	req.logout();
 	res.end('LOGOUT');
 })
+
+
 router.get('/member/dup/:id',checkDuplicate);
 router.get('/member/info/:id',showMemberInfo)
 router.post('/member/signin',registMember);

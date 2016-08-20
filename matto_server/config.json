@@ -3,7 +3,7 @@
         "username" : "root",
         "password" : "matto123",
         "host" : "14.63.226.110",
-        "database" : "test",
+        "database" : "test3",
         "dialect" : "mysql",
         "port" : 3306,
         "pool": { "max": 5, "min": 0, "idle": 10000 }

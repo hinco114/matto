@@ -1,15 +1,28 @@
 /*
 Matto Project
-
+2016-08-26
+온습도센서 추가
+핀번호 매칭 다시 해야함.
+현재 딜레이 없이 루프 돔.
 */
+
+//온습도센서
+#include "DHT.h"	//온습도센서 라이브러리 (DHT22)
+#define DHTPIN 2     //센서 핀번호
+#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
+DHT dht(DHTPIN, DHTTYPE);
+float humidity;
+float temperature;
+
+//시간을 위한 변수
 unsigned long current_time=0;
 unsigned long prev_time=0;
-int interval = 500;
+int interval = 500;	//센싱 유지 간격
 
 //핀 셋팅
-int tissue_pin[2]={3,4};
-int door_sensing_pin[2]={5,6};
-int sector_sensing_pin[2]={7,8};
+int tissue_pin[2]={3,4};		//휴지센서
+int door_sensing_pin[2]={5,6};		//입구센서
+int sector_sensing_pin[2]={7,8};		//칸센서
 
 //센서값
 int door_sens[4];
@@ -25,12 +38,14 @@ void setup(){
 	for(int i=5;i<7;i++){
 		pinMode(sector_sensing_pin[i],INPUT);
 	}
+	dht.begin();	//온습도센서 구현. 센싱에 250ms 소요
 }
 
 void loop(){
 	current_time = millis();
 	sensing_door();
 	doorcount();
+	sensing_dht();
 	//communicate();
 	//Serial.println(number_person);
 }
@@ -45,7 +60,16 @@ void communicate(){	//통신관련 함수
 }
 */
 
-void sensing_door(){
+void sensing_dht(){
+	humidity = dht.readHumidity();	//습도
+	temperature = dht.readTemperature();	//온도 (C)
+	if (isnan(h) || isnan(t)) {
+		Serial.println("Failed to read from DHT sensor!");
+		return;
+  	}
+}
+
+void sensing_door(){	//입구센서 센싱
 	//0,1 -> 입구쪽, 안쪽
 	for(int i=0;i<2;i++){
 		door_sens[i]=digitalRead(door_sensing_pin[i]);
@@ -58,7 +82,7 @@ void sensing_door(){
 	*/
 }
 
-void doorcount(){
+void doorcount(){	//입구센서 카운팅 함수 (센싱 되어있어야 함)
 	static int isin,isout={0};
 	//안쪽센서 인식시
 	if(door_sens[1]==1){

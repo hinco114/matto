@@ -1,40 +1,22 @@
-var Sequelize = require('sequelize');
-var sequelize = require('../routes/dbConnection');
-var Member = sequelize.define('member',{
-    id : {type:Sequelize.STRING(15),primaryKey:true},
-    pwd : {type:Sequelize.STRING(15)},
-    secondpwd : {type:Sequelize.STRING(15)},
-    sex : {type:Sequelize.STRING(1)},
-    phoneNum : {type:Sequelize.INTEGER},
-},{timestamps:true, tableName : 'member_info'});
-Member.sync();
+'use strict';
 
-var Toilet = sequelize.define('toilet_info',{
-    toilet_idx : {type:Sequelize.STRING(15),primaryKey:true},
-    name : {type:Sequelize.STRING(15)},
-    longitude : {type:Sequelize.DOUBLE},
-    latitude : {type:Sequelize.DOUBLE},
-    address : {type:Sequelize.STRING(30)},
-    room_count : {type:Sequelize.INTEGER},
-    img_src : {type:Sequelize.STRING(50)},
-    beacon_id : {type:Sequelize.STRING(20)}
-});
-Toilet.sync();
-
-var Report = sequelize.define('report_list',{
-    report_idx : {type:Sequelize.STRING(15),primaryKey:true},
-    id : {type:Sequelize.STRING(15)},
-    toilet_idx : {type:Sequelize.STRING(15)}
-});
-Member.hasMany(Report,{foreignKey: 'id'});
-Toilet.hasMany(Report,{foreignKey: 'toilet_idx'});
-Report.sync();
-/*
-Member.verifyPassword = function(){
-
-}
-*/
-module.exports = Member;
-
+//Member 모델 정의
+module.exports = function(sequelize, DataTypes) {
+	  return sequelize.define("Member", {
+	    id : {type : DataTypes.STRING(15), primaryKey : true, allowNull : false},
+	    pwd : {type : DataTypes.STRING(15), allowNull : false},
+	    ndPwd : {type : DataTypes.STRING(15), allowNull : true},
+	    gender : {type : DataTypes.STRING(1), allowNull : false},
+	    phoneNum : {type : DataTypes.STRING(12), allowNull : false}, // 유니크
+	    createdAt : {type : DataTypes.DATE, defaultValue: DataTypes.NOW},
+	    updatedAt : {type : DataTypes.DATE, defaultValue: DataTypes.NOW}
+	  }, {
+		    classMethods: {},
+		    tableName: 'members',
+		    freezeTableName: true,
+		    underscored: true,
+		    timestamps: false
+		  });
+	};
 
 

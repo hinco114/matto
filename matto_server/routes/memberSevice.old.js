@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var pool = require('./dbConnection');
-var passport  = reuqire('./passport');
+//var passport  = reuqire('./passport');
 
 router.get('/member/:id',searchByID);
 router.post('/member',registMember);

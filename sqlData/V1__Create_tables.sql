@@ -1,7 +1,7 @@
 create table if not exists members(
 	id varchar(15) primary key,
     pwd varchar(15) not null,
-    ndPwd varchar(15) not null,
+    ndPwd varchar(15),
     gender char(1) not null,
     phoneNum varchar(12) unique not null,
 	createdAt datetime not null,
@@ -28,7 +28,7 @@ create table if not exists products(
     description varchar(30)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table if not exists report(
+create table if not exists reports(
 	reportIdx int auto_increment primary key,
     id varchar(15),
     toiletIdx int,
@@ -37,7 +37,7 @@ create table if not exists report(
     foreign key (toiletIdx) references toilets(toiletIdx)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table if not exists toiletHistories(
+create table if not exists toiletLogs(
 	useIdx int auto_increment primary key,
 	id varchar(15),
     toiletIdx int,
@@ -56,7 +56,7 @@ create table if not exists toiletProducts(
     foreign key(productIdx) references products(productIdx)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table if not exists purchaseHistories(
+create table if not exists purchaseLogs(
 	sellIdx int auto_increment primary key,
     id varchar(15),
     toiletProductIdx int,

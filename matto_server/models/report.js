@@ -1,14 +1,19 @@
-var Sequelize = require('sequelize');
-var sequelize = require('../routes/dbConnection');
+'use strict';
 
-var member = require('./member');
-var toilet = require('./toilet');
+var models = require('./index');
 
-var Report = sequelize.define('report_list',{
-    report_idx : {type:Sequelize.STRING(15),primaryKey:true},
-    id : {type:Sequelize.STRING(15)},
-    toilet_idx : {type:Sequelize.STRING(15)}
-});
-member.hasMany(Report,{foreignKey: 'id'});
-toilet.hasMany(Report,{foreignKey: 'toilet_idx'});
-Report.sync();
+module.exports = function(sequelize, DataTypes) {
+	  return sequelize.define("Report", {
+	    reportIdx : {type : DataTypes.INTEGER, primaryKey : true,  autoIncrement: true, allowNull : false},
+	    id : {type : DataTypes.STRING(15),  references: {model: models.Member, key: 'id'}},
+	    toiletIdx   : {type : DataTypes.INTEGER, references: {model: models.Toilet, key: 'toiletIdx'}},
+	    createdAt : {type : DataTypes.DATE, defaultValue: DataTypes.NOW},
+	  }, {
+		    classMethods: {},
+		    tableName: 'reports',
+		    freezeTableName: true,
+		    underscored: true,
+		    timestamps : false
+		  });
+	};
+

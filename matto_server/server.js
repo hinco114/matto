@@ -9,11 +9,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 //Login Authenticate
 var passport = require('passport');
-var passport_config = require('./routes/passport');
-
-
-
-
+//var passport_config = require('./routes/passport');
 var memberService = require('./routes/memberService');
 
 app.use(logger('dev'));
@@ -31,7 +27,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-passport_config();
+//passport_config();
 
 //front-end resource static path
 app.use(express.static(path.join(__dirname, 'public')));

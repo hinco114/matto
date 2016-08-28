@@ -10,10 +10,12 @@ var passport = require('passport');
  * console.log('login ok'); res.end('login'); })
  */
 
+// 회원가입
 router.post('/members', registMember);
-
 // 회원정보 수정 waterfall 적용
 router.put('/members/:id', modifyMemberInfo);
+// 회원 정보 조회
+router.get('/members/:id', getMemberInfo);
 
 router.get('/login', function(req, res) {
 	res.end('login get');
@@ -62,8 +64,7 @@ function modifyMemberInfo(req, res) {
 	};
 
 	console.log(member);
-	
-	
+
 	// 비동기 waterfall
 	async.waterfall([ function(callback) {
 		// 파라미터와 body의 id 불일치
@@ -99,15 +100,48 @@ function modifyMemberInfo(req, res) {
 	} ], function(err) {
 		// 에러시 에러 출력
 		if (err != null) {
-			console.log('error::::::::::::::' + err);
 			res.status(400);
 			result.status = 'F';
 			result.reason = err;
 		} else {
-			// res.status(201);
+			res.status(201);
 			result.status = 'S';
 		}
 		res.json(result);
+	});
+}
+
+function getMemberInfo(req, res) {
+	// 쿼리스트링 type
+	var type = req.query.type;
+	if (typeof (type) != 'string')
+		type = '';
+	// 동적파라미터 id
+	var id = req.params.id;
+	var result = {
+		id : req.params.id,
+		status : null,
+		reason : null
+	};
+
+	models.Member.findById(id, {
+		attributes : [ 'id', 'gender', 'phoneNum' ]
+	}).then(function(member) {
+		//조회 내역이 없으면
+		if (member == null) {
+			result.status = 'F';
+			result.reason = 'no exists member';
+		}
+		result.status = 'S';
+
+		// type이 id가 아니면 mebers객체 추가
+		if (type != 'id') {
+			result.member = member;
+		}
+		res.json(result);
+	}, function(err) {
+		result.status = 'F';
+		res.json(result)
 	});
 }
 

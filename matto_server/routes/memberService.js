@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+
+var async = require('async');
 var models = require('../models');
 var passport = require('passport');
 
@@ -8,39 +10,10 @@ var passport = require('passport');
  * console.log('login ok'); res.end('login'); })
  */
 
+router.post('/members', registMember);
 
-//회원가입 작성중
-router.post('/members', function(req, res) {
-	var member = req.body;
-	console.log(member);
-	models.Member.create(member).then(function() {
-		res.status(201);
-		res.send('success');
-
-	}, function(err) {
-		res.status(400);
-		console.log(err);
-		res.send('fail');
-	});
-
-});
-
-
-//회원정보 수정 작성중
-router.put('/members/:id', function(req,res){
-	var modifyInfo = req.body;
-	var whereQ = {where :{id : req.params.id}};
-	console.log(modifyInfo);
-	models.Member.update(modifyInfo,whereQ).then(function() {
-		res.status(201);
-		res.send('success');
-
-	}, function(err) {
-		res.status(400);
-		console.log(err);
-		res.send('fail');
-	});
-})
+// 회원정보 수정 waterfall 적용
+router.put('/members/:id', modifyMemberInfo);
 
 router.get('/login', function(req, res) {
 	res.end('login get');
@@ -50,6 +23,93 @@ router.get('/logout', function(req, res) {
 	req.logout();
 	res.end('LOGOUT');
 })
+
+// 회원 가입 함수
+function registMember(req, res) {
+	var member = req.body;
+	var result = {
+		id : member.id,
+		status : null,
+		reason : null
+	};
+
+	models.Member.create(member).then(function() {
+		res.status(201);
+		result.status = 'S';
+		res.json(result);
+	}, function(err) {
+		res.status(400);
+		console.log(err);
+		result.status = 'F';
+		result.reason = err.errors[0]['message'];
+		res.json(result);
+	});
+
+}
+
+function modifyMemberInfo(req, res) {
+	var member = req.body;
+	var result = {
+		id : member.id,
+		status : null,
+		reason : null
+	};
+	// 조건문
+	var where = {
+		where : {
+			id : req.params.id
+		}
+	};
+
+	console.log(member);
+	
+	
+	// 비동기 waterfall
+	async.waterfall([ function(callback) {
+		// 파라미터와 body의 id 불일치
+		if (member.id != req.params.id) {
+			callback('no match id');
+		} else {
+			callback();
+		}
+	}, function(callback) {
+		// 아이디 존재 유무 확인
+		models.Member.findById(member.id).then(function(memInfo) {
+			callback(memInfo, callback)
+		}, function() {
+			callback('not exists member', member);
+		});
+	}, function(memInfo, callback) {
+		// 비밀번호 존재 유무 확인
+		if (memInfo.pwd != member.pwd) {
+			callback('no match password');
+		}
+		callback();
+	}, function(callback) {
+		// 수정 시간 갱신
+		member.updatedAt = models.Sequelize.fn('NOW');
+		console.log(member);
+		models.Member.update(member, where).then(function() {
+			callback();
+		}, function(err) {
+			console.log(err);
+			callback(err.errors[0]['message']);
+		});
+
+	} ], function(err) {
+		// 에러시 에러 출력
+		if (err != null) {
+			console.log('error::::::::::::::' + err);
+			res.status(400);
+			result.status = 'F';
+			result.reason = err;
+		} else {
+			// res.status(201);
+			result.status = 'S';
+		}
+		res.json(result);
+	});
+}
 
 /*
  * router.get('/member/dup/:id',checkDuplicate);
@@ -66,8 +126,7 @@ router.get('/logout', function(req, res) {
  * req.body.pwd, sex : req.body.sex, phoneNum : req.body.phoneNum };
  * Member.create(inputData).then(function(){ res.end(JSON.stringify({status :
  * 'success'})); },function (err) { console.log(err);
- * res.end(JSON.stringify({status : 'fail'})); });
- *  }
+ * res.end(JSON.stringify({status : 'fail'})); }); }
  * 
  * function checkDuplicate(req,res) { var id = req.params.id;
  * Member.findById(id).then( function (result){ res.end(JSON.stringify({status :

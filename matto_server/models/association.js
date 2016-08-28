@@ -28,4 +28,4 @@ var initAssoci = {
   }
 };
 
-module.exports = initAssoci;
+module.exports = initAssoci

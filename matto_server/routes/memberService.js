@@ -14,6 +14,8 @@ var passport = require('passport');
 router.post('/members', registMember);
 // 회원정보 수정 waterfall 적용
 router.put('/members/:id', modifyMemberInfo);
+// 회원 정보 전체 조회
+router.get('/members', getAllMemberInfo);
 // 회원 정보 조회
 router.get('/members/:id', getMemberInfo);
 // 회원 정보 삭제
@@ -120,7 +122,6 @@ function modifyMemberInfo(req, res) {
 }
 
 // 회원 정보 반환
-//TO-DO 정해진 인원 반환 구현 필요
 function getMemberInfo(req, res) {
 	// 쿼리스트링 type
 	var type = req.query.type;
@@ -141,9 +142,9 @@ function getMemberInfo(req, res) {
 		if (member == null) {
 			result.status = 'F';
 			result.reason = 'no exists member';
+		}else{
+			result.status = 'S';
 		}
-		result.status = 'S';
-
 		// type이 id가 아니면 mebers객체 추가
 		if (type != 'id') {
 			result.member = member;
@@ -154,6 +155,41 @@ function getMemberInfo(req, res) {
 		res.json(result)
 	});
 }
+
+function getAllMemberInfo(req,res){
+	var qOffset = parseInt(req.query.offset);
+	var result ={
+			status : null,
+			reason : null,
+			lastOffset : null,
+			members : null
+	}
+	
+	models.Member.findAll({attributes : [ 'id', 'gender', 'phoneNum'], offset : qOffset, limit : 20}).then(
+			function(ret){
+				if(ret.length == 0){
+					res.status(400);
+					result.status = 'F';
+					result.reason = 'not find member';
+					
+				}else{
+					console.log(ret);
+					result.status = 'S';
+					result.lastOffset = qOffset + ret.length;
+					result.members = ret;
+				}
+				res.json(result);
+			}, function(err){
+				console.log(err);
+				result.status = 'F';
+				result.reason = err.message;
+				res.json(result);
+			});
+}
+
+
+
+
 
 // 회원정보 삭제
 function deleteMemberInfo(req,res){

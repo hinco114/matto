@@ -11,6 +11,7 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 //var passport_config = require('./routes/passport');
 var memberService = require('./routes/memberService');
+var productService = require('./routes/productService');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -34,6 +35,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use('/api/0.1v',memberService);
+app.use('/api/0.1v',productService);
+
 app.get('/',function(req,res){
    res.end('SERVER TEST'); 
 });

@@ -16,6 +16,11 @@ router.post('/members', registMember);
 router.put('/members/:id', modifyMemberInfo);
 // 회원 정보 조회
 router.get('/members/:id', getMemberInfo);
+// 회원 정보 삭제
+router.delete('/members/:id', deleteMemberInfo);
+
+
+
 
 router.get('/login', function(req, res) {
 	res.end('login get');
@@ -49,6 +54,9 @@ function registMember(req, res) {
 
 }
 
+
+
+// 회원 정보 수정
 function modifyMemberInfo(req, res) {
 	var member = req.body;
 	var result = {
@@ -111,6 +119,8 @@ function modifyMemberInfo(req, res) {
 	});
 }
 
+// 회원 정보 반환
+//TO-DO 정해진 인원 반환 구현 필요
 function getMemberInfo(req, res) {
 	// 쿼리스트링 type
 	var type = req.query.type;
@@ -127,7 +137,7 @@ function getMemberInfo(req, res) {
 	models.Member.findById(id, {
 		attributes : [ 'id', 'gender', 'phoneNum' ]
 	}).then(function(member) {
-		//조회 내역이 없으면
+		// 조회 내역이 없으면
 		if (member == null) {
 			result.status = 'F';
 			result.reason = 'no exists member';
@@ -144,6 +154,35 @@ function getMemberInfo(req, res) {
 		res.json(result)
 	});
 }
+
+// 회원정보 삭제
+function deleteMemberInfo(req,res){
+	console.log('DELETE');
+	var where = {where : {id : req.params.id}};
+	var result = {
+			id : req.params.id,
+			status : null,
+			reason : null
+		};	
+	models.Member.destroy(where).then(function(ret){
+		if(ret == 1){
+			result.status = 'S';
+		}
+		else {
+			result.status = 'F';
+			result.reason = 'delete fail';
+			res.status(400);			
+		}
+		res.json(result);
+	}, function(errs){
+		result.status = 'F';
+		result.reason = 'delete fail';
+		res.json(result);
+	});
+}
+
+
+
 
 /*
  * router.get('/member/dup/:id',checkDuplicate);

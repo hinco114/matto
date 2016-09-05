@@ -5,7 +5,7 @@ module.exports = function(sequelize, DataTypes) {
 	  return sequelize.define("Toilet", {
 	    toiletIdx : {type : DataTypes.INTEGER, primaryKey : true, autoIncrement: true, allowNull : false},
 	    name : {type : DataTypes.STRING(20), allowNull : false},
-	    longtitude : {type : DataTypes.DOUBLE},
+	    longitude : {type : DataTypes.DOUBLE},
 	    latitude : {type : DataTypes.DOUBLE},
 	    address : {type : DataTypes.STRING(50)}, // 유니크
 	    roomCount : {type : DataTypes.INTEGER},

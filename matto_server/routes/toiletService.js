@@ -115,9 +115,15 @@ function deleteToiletInfo(req, res) {
 			toilet_idx : null
 	}
 	models.Toilet.destroy({where: {toiletIdx : idx}}).then(function(ret) {
-		console.log(ret);
-		result.status = 'S';
-		result.toilet_idx = ret;
+		if (ret == 1) {
+			console.log(ret);
+			result.status = 'S';
+			result.toilet_idx = ret;
+		} else {
+			res.status(400);
+			result.status = 'F';
+			result.reason = 'delete failed';
+		}
 		res.json(result);
 	}, function(err) {
 			console.log(err);

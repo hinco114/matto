@@ -12,6 +12,7 @@ var passport = require('passport');
 //var passport_config = require('./routes/passport');
 var memberService = require('./routes/memberService');
 var productService = require('./routes/productService');
+var toiletService = require('./routes/toiletService');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());

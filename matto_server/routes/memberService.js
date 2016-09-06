@@ -210,9 +210,9 @@ function deleteMemberInfo(req,res){
 			res.status(400);			
 		}
 		res.json(result);
-	}, function(errs){
+	}, function(err){
 		result.status = 'F';
-		result.reason = 'delete fail';
+		result.reason = err.message;
 		res.json(result);
 	});
 }

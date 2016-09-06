@@ -4,10 +4,9 @@ var models = require('./index');
 
 module.exports = function(sequelize, DataTypes) {
 	  return sequelize.define("ToiletProduct", {
-	    toiletProductIdx : {type : DataTypes.INTEGER, primaryKey : true,  autoIncrement: true, allowNull : false},
-	    stock : {type : DataTypes.INTEGER},
-	    toiletIdx   : {type : DataTypes.INTEGER,  references: {model: models.Toilet, key: 'toiletIdx'}},
-	    productIdx   : {type : DataTypes.INTEGER,  references: {model: models.Product, key: 'productIdx'}}
+	    toiletIdx   : {type : DataTypes.INTEGER, primaryKey : true, references: {model: models.Toilet, key: 'toiletIdx'}},
+	    productIdx   : {type : DataTypes.INTEGER, primaryKey : true, references: {model: models.Product, key: 'productIdx'}},
+	    stock : {type : DataTypes.INTEGER}
 	  }, {
 		    classMethods: {},
 		    tableName: 'toiletProducts',

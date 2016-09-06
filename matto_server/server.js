@@ -13,6 +13,7 @@ var passport = require('passport');
 var memberService = require('./routes/memberService');
 var productService = require('./routes/productService');
 var toiletService = require('./routes/toiletService');
+var toiletProductService = require('./routes/toiletProductService');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -37,6 +38,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/0.1v',memberService);
 app.use('/api/0.1v',productService);
+app.use('/api/0.1v',toiletProductService);
+app.use('/api/0.1v',toiletService);
+
 
 app.get('/',function(req,res){
    res.end('SERVER TEST'); 

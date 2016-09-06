@@ -18,7 +18,7 @@ var initAssoci = {
 	db.Product.belongsToMany(db.Toilet, {through : db.ToiletProduct, foreignKey : 'productIdx'});
 
 	//상품화장실은 여러 구매내역을 갖는다.
-	db.ToiletProduct.hasMany(db.PurchaseLog,{foreignKey : 'toiletProductIdx'});
+	db.ToiletProduct.hasMany(db.PurchaseLog,{foreignKey : ['toiletIdx','productIdx']});
 	//db.PurchaseLog.belongsTo(db.ToiletProduct, {foreignKey : 'toiletProductIdx'});
 	//회원은 여러 구매내역을 갖는다.
 	

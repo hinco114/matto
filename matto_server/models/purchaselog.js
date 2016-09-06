@@ -17,11 +17,18 @@ module.exports = function(sequelize, DataTypes) {
 				key : 'id'
 			}
 		},
-		toiletProductIdx : {
+		toiletIdx : {
 			type : DataTypes.INTEGER,
 			references : {
 				model : models.ToiletProduct,
-				key : 'toiletProductIdx'
+				key : 'toiletIdx'
+			}
+		},
+		productIdx : {
+			type : DataTypes.INTEGER,
+			references : {
+				model : models.ToiletProduct,
+				key : 'productIdx'
 			}
 		},
 		amount : {

@@ -1,0 +1,17 @@
+{
+  "ecmaVersion": 5,
+  "plugins": {
+    "node": {
+      
+    },
+    "node-express": {
+      
+    },
+    "node-extension": {
+      
+    }
+  },
+  "libs": [
+    "browser"
+  ]
+}

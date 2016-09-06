@@ -88,22 +88,34 @@ function getToiletInfo(req, res) {
 
 // 화장실정보 전체조회 함수
 function getAllToiletInfo(req, res) {
+	// 쿼리스트링 offset
+	var qOffset = parseInt(req.query.offset);
 	var result = {
 			status : null,
 			reason : null,
-			toilet_info : null
+			lastOffset : null,
+			toilets : null
 	}
-	models.Toilet.findAll().then(function(toilets) {
-		result.status = 'S';
-		result.toilet_info = toilets;
-		res.json(result);
-	}, function(err) {
-			console.log(err);
-			res.status(400);
-			result.status = 'F';
-			result.reason = err.message;
-			res.json(result);
-		})
+	models.Toilet.findAll({offset : qOffset, limit : 20}).then(
+			function(ret){
+				if(ret.length == 0){
+					res.status(400);
+					result.status = 'F';
+					result.reason = 'not find toilet';
+					
+				}else{
+					console.log(ret);
+					result.status = 'S';
+					result.lastOffset = qOffset + ret.length;
+					result.toilets = ret;
+				}
+				res.json(result);
+			}, function(err){
+				console.log(err);
+				result.status = 'F';
+				result.reason = err.message;
+				res.json(result);
+			})
 }
 
 // 화장실정보 삭제 함수 

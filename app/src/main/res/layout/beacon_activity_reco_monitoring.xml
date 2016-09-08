@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="com.perples.recosample.RecoMonitoringActivity">
+    tools:context="com.example.seonoh2.smarttoliet01.beacon.RecoMonitoringActivity">
 
-    <ListView android:id="@+id/list_monitoring"
+    <ListView
+        android:id="@+id/list_monitoring"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp">
-    </ListView>
+        android:padding="10dp"></ListView>
 
 </RelativeLayout>

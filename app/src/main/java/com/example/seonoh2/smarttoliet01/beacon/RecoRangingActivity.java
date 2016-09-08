@@ -28,6 +28,7 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.widget.ListView;
 
+import com.example.seonoh2.smarttoliet01.R;
 import com.perples.recosdk.RECOBeacon;
 import com.perples.recosdk.RECOBeaconRegion;
 import com.perples.recosdk.RECOErrorCode;

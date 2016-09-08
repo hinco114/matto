@@ -131,7 +131,7 @@ public abstract class RecoActivity extends Activity implements RECOServiceConnec
                 // Otherwise, set the URL to null.
                 Uri.parse("http://host/path"),
                 // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://com.perples.recosample/http/host/path")
+                Uri.parse("android-app://com.example.seonoh2.smarttoliet01/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
     }
@@ -150,7 +150,7 @@ public abstract class RecoActivity extends Activity implements RECOServiceConnec
                 // Otherwise, set the URL to null.
                 Uri.parse("http://host/path"),
                 // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://com.perples.recosample/http/host/path")
+                Uri.parse("android-app://com.example.seonoh2.smarttoliet01/http/host/path")
         );
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();

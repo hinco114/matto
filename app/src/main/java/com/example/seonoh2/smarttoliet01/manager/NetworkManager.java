@@ -103,16 +103,17 @@ public class NetworkManager  {
 
     private static final String SMART_TOLIET_SEVER = "http://14.63.226.110:3000";
 
-    /*회원가입*/
-       private static final String SMART_TOLIET_SIGNUP = SMART_TOLIET_SEVER + "/api/0.1v/member/signin/";
-    public Request getUserSignUp( String id , String sex, String cp, String pwd, String pwd2, OnResultListener<SignUpResult> listener) {
+       /*회원가입*/
+    private static final String SMART_TOLIET_SIGNUP = SMART_TOLIET_SEVER + "/api/0.1v/members";
+    public Request getUserSignUp( String id , String pwd, String ndPwd, String gender, String phoneNum, OnResultListener<SignUpResult> listener) {
         String url = SMART_TOLIET_SIGNUP;
+
         RequestBody body = new FormBody.Builder()
                 .add("id", id)
-                .add("sex", sex)
-                .add("cp", cp)
                 .add("pwd", pwd)
-                .add("pwd2", pwd2)
+                .add("ndPwd", ndPwd)
+                .add("gender", gender)
+                .add("phoneNum", phoneNum)
                 .build();
 
         Request request = new Request.Builder()

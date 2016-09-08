@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.example.seonoh2.smarttoliet01.R;
 import com.perples.recosdk.RECOBeacon;
 
 import java.util.ArrayList;

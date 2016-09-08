@@ -7,11 +7,11 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 
@@ -19,11 +19,10 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-    public Button btn_map;
-    public Button btn_open;
-    public Button btn_buy;
-    public Button btn_report;
-    public Button btn_setting;
+    public CardView btn_open;
+    public CardView btn_buy;
+    public CardView btn_report;
+    public CardView btn_setting;
 
 
     @Override
@@ -33,26 +32,10 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-        btn_map = (Button) findViewById(R.id.btn_map);
-        btn_open = (Button) findViewById(R.id.btn_open);
-        btn_report = (Button) findViewById(R.id.btn_report);
-        btn_buy = (Button) findViewById(R.id.btn_buy);
-        btn_setting = (Button) findViewById(R.id.btn_setting);
-
-
-        btn_map.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Maps.class);
-                Toast.makeText(MainActivity.this, "지도 클릭 확인", Toast.LENGTH_SHORT).show();
-                startActivity(intent);
-
-                finish();
-
-
-            }
-        });
+        btn_open = (CardView) findViewById(R.id.btn_open);
+        btn_report = (CardView) findViewById(R.id.btn_report);
+        btn_buy = (CardView) findViewById(R.id.btn_buy);
+        btn_setting = (CardView) findViewById(R.id.btn_setting);
 
         btn_open.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,16 +87,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
-//        fab李� 臾몄옄硫붿떆吏��벑 �렪�쓽湲곕뒫 媛��뒫�븷 寃껋엫. �뾼�꽑�삤�뿉寃� 硫붿꽭吏�蹂대궡湲� �벑.
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

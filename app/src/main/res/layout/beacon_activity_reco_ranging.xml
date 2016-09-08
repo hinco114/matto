@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="com.perples.recosample.RecoRangingActivity">
+    tools:context="com.example.seonoh2.smarttoliet01.beacon.RecoRangingActivity">
 
     <ListView android:id="@+id/list_ranging"
         android:layout_width="match_parent"

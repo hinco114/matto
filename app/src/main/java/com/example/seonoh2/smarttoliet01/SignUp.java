@@ -42,7 +42,7 @@ public class SignUp extends AppCompatActivity {
         et_Sex = (EditText) findViewById(R.id.et_Sex); //gender
         et_CellPhone = (EditText) findViewById(R.id.et_CellPhone);
         et_Password = (EditText) findViewById(R.id.et_Password);
-        et_SecondPassword= (EditText) findViewById(R.id.et_SecondPassword); //ndPwd 2차비밀번호
+        et_SecondPassword = (EditText) findViewById(R.id.et_SecondPassword); //ndPwd 2차비밀번호
 
 
 //        String Id = et_Id.getText().toString();
@@ -58,19 +58,37 @@ public class SignUp extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), Login.class);
                 startActivity(intent);
 
-                NetworkManager.getInstance().getUserSignUp(et_Id.getText().toString(),et_Password.getText().toString(), et_SecondPassword.getText().toString(), et_Sex.getText().toString(), et_CellPhone.getText().toString(),  new NetworkManager.OnResultListener<SignUpResult>() {
+                NetworkManager.getInstance().getUserSignUp(et_Id.getText().toString(), et_Password.getText().toString(), et_SecondPassword.getText().toString(), et_Sex.getText().toString(), et_CellPhone.getText().toString(), new NetworkManager.OnResultListener<SignUpResult>() {
                     @Override
                     public void onSuccess(Request request, SignUpResult result) {
+
+                        if (et_Id == null) {
+                            Toast.makeText(SignUp.this, "ID를 입력해주세요.", Toast.LENGTH_LONG).show();
+                        }
+                        if (et_Password == null) {
+                            Toast.makeText(SignUp.this, "비밀번호를 입력해주세요.", Toast.LENGTH_LONG).show();
+                        }
+                        if (et_SecondPassword == null) {
+                            Toast.makeText(SignUp.this, "2차 비밀번호를 입력해주세요.", Toast.LENGTH_LONG).show();
+                        }
+                        if (et_Sex == null) {
+                            Toast.makeText(SignUp.this, "성별을 입력해주세요.", Toast.LENGTH_LONG).show();
+                        }
+                        if (et_CellPhone == null) {
+                            Toast.makeText(SignUp.this, "ID를 입력해주세요.", Toast.LENGTH_LONG).show();
+                        }
+
+
                         SignUpResult data = result;
 //                        Toast.makeText(SignUp.this, data.getStatus().toString(), Toast.LENGTH_LONG).show();
-                        Toast.makeText(SignUp.this, "Matto 회원가입을 축하드립니다\n"+  et_Id.getText().toString()+"님", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SignUp.this, "Matto 회원가입을 축하드립니다\n" + et_Id.getText().toString() + "님", Toast.LENGTH_LONG).show();
 
 
                     }
 
                     @Override
                     public void onFail(Request request, IOException exception) {
-                        Toast.makeText(SignUp.this,"전송 실패", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SignUp.this, "전송 실패", Toast.LENGTH_LONG).show();
 
                     }
                 });

@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 
@@ -23,6 +24,8 @@ public class MainActivity extends AppCompatActivity
     public CardView btn_buy;
     public CardView btn_report;
     public CardView btn_setting;
+
+    public Button btn_map;
 
 
     @Override
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity
         btn_report = (CardView) findViewById(R.id.btn_report);
         btn_buy = (CardView) findViewById(R.id.btn_buy);
         btn_setting = (CardView) findViewById(R.id.btn_setting);
+        btn_map = (Button)findViewById(R.id.btn_map);
 
         btn_open.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +64,18 @@ public class MainActivity extends AppCompatActivity
 //                });
             }
         });
+
+        btn_map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), Maps.class);
+                startActivity(intent);
+
+            }
+        });
+
+
+
         btn_report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

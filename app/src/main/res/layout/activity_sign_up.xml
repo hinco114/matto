@@ -21,7 +21,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
-        android:id="@+id/et_id"
+        android:id="@+id/et_Id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"

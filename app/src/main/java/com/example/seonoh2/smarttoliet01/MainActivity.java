@@ -14,13 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.seonoh2.smarttoliet01.data.SignUpResult;
-import com.example.seonoh2.smarttoliet01.manager.NetworkManager;
-
-import java.io.IOException;
-
-import okhttp3.Request;
-
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -64,24 +57,24 @@ public class MainActivity extends AppCompatActivity
         btn_open.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                Toast.makeText(MainActivity.this, "문이 열렸습니다. ", Toast.LENGTH_SHORT).show();
-//                startActivity(intent);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Toast.makeText(MainActivity.this, "문이 열렸습니다. ", Toast.LENGTH_SHORT).show();
+                startActivity(intent);
 
-//                finish();
-                NetworkManager.getInstance().getUserSignUp("aaaa", "f", "010", "1234", "1234", new NetworkManager.OnResultListener<SignUpResult>() {
-                    @Override
-                    public void onSuccess(Request request, SignUpResult result) {
-                        SignUpResult data = result;
-                        Toast.makeText(MainActivity.this, data.getStatus().toString(), Toast.LENGTH_LONG).show();
-
-                    }
-
-                    @Override
-                    public void onFail(Request request, IOException exception) {
-
-                    }
-                });
+                finish();
+//                NetworkManager.getInstance().getUserSignUp("aaaa", "f", "010", "1234", "1234", new NetworkManager.OnResultListener<SignUpResult>() {
+//                    @Override
+//                    public void onSuccess(Request request, SignUpResult result) {
+//                        SignUpResult data = result;
+//                        Toast.makeText(MainActivity.this, data.getStatus().toString(), Toast.LENGTH_LONG).show();
+//
+//                    }
+//
+//                    @Override
+//                    public void onFail(Request request, IOException exception) {
+//
+//                    }
+//                });
             }
         });
         btn_report.setOnClickListener(new View.OnClickListener() {

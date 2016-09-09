@@ -14,7 +14,7 @@ import android.util.Log;
 import java.util.Timer;
 import java.util.TimerTask;
 
-//AppCompatActivity 추가한부분
+
 public class MyLocation extends AppCompatActivity {
 
     Timer timer1;

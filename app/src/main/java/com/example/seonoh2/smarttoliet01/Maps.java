@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class Maps extends FragmentActivity implements OnMapReadyCallback {
     private GoogleMap map;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,14 +57,13 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
             public void gotLocation(Location location) {
 
 
-
 //                String msg = "현재 설정된 위치 정보 lon: "+location.getLongitude()+" -- lat: "+location.getLatitude();
-                String msg = "현재 설정된 위치 정보 \n 위도 :  "+location.getLatitude()+"\n"+"경도 : "+location.getLongitude();
+                String msg = "현재 설정된 위치 정보 \n 위도 :  " + location.getLatitude() + "\n경도 : " + location.getLongitude();
 //
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                 Toast.makeText(getApplicationContext(), "오른쪽 상단의 버튼을 클릭하시면 현재 위치를 볼 수 있습니다.", Toast.LENGTH_LONG).show();
 
-                drawMarker(location,map);
+                drawMarker(location, map);
 
             }
         };
@@ -72,14 +72,13 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         myLocation.getLocation(getApplicationContext(), locationResult);
 
 
-
     }
+
     public void drawMarker(Location location, GoogleMap map) {
 
         //기존 마커 지우기
 //        map.clear();
         LatLng currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
-
 
 
         //currentPosition 위치로 카메라 중심을 옮기고 화면 줌을 조정한다. 줌범위는 2~21, 숫자클수록 확대
@@ -91,11 +90,10 @@ public class Maps extends FragmentActivity implements OnMapReadyCallback {
         map.addMarker(new MarkerOptions()
                 .position(currentPosition)
                 .snippet("Lat:" + location.getLatitude() + "Lng:" + location.getLongitude())
+
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                 .title("현재 위치"));
     }
-
-
 
 
 }

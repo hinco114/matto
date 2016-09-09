@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity
 
     public Button btn_map;
 
+//    public Button btn_mylocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,10 @@ public class MainActivity extends AppCompatActivity
         btn_report = (CardView) findViewById(R.id.btn_report);
         btn_buy = (CardView) findViewById(R.id.btn_buy);
         btn_setting = (CardView) findViewById(R.id.btn_setting);
-        btn_map = (Button)findViewById(R.id.btn_map);
+        btn_map = (Button) findViewById(R.id.btn_map);
+
+
+//        btn_mylocation = (Button)findViewById(R.id.btn_mylocation);
 
         btn_open.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +78,14 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+//        btn_mylocation.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getApplicationContext(), MyLocation.class);
+//                startActivity(intent);
+//
+//            }
+//        });
 
 
         btn_report.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +114,6 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

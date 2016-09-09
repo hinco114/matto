@@ -50,6 +50,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Main2Activity" />
+        <activity android:name=".MyLocation" /> //현재위치
         <activity android:name=".ItemBuy" />
         <activity android:name=".Notify" />
         <activity android:name=".Setting" />
@@ -58,6 +59,9 @@
 
 
         </activity>
+
+
+
         <activity android:name=".SignUp">
 
 

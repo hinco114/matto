@@ -17,7 +17,6 @@ create table if not exists toilets(
     roomCount int,
     imgSrc varchar(50),
     beaconId varchar(50),
-    ipAddr varchar(30),
     createdAt datetime not null
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -49,9 +48,10 @@ create table if not exists toiletLogs(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 create table if not exists toiletProducts(
-    toiletIdx int primary key,
-    productIdx int primary key,
+	toiletProductIdx int auto_increment primary key,
     stock int,  
+    toiletIdx int,
+    productIdx int,
     foreign key(toiletIdx) references toilets(toiletIdx), 
     foreign key(productIdx) references products(productIdx)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

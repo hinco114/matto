@@ -7,6 +7,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,24 +15,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.seonoh2.smarttoliet01.data.SignUpResult;
-import com.example.seonoh2.smarttoliet01.manager.NetworkManager;
-
-import java.io.IOException;
-
-import okhttp3.Request;
-
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-    public Button btn_map;
-    public Button btn_open;
-    public Button btn_buy;
-    public Button btn_report;
-    public Button btn_setting;
+    public CardView btn_open;
+    public CardView btn_buy;
+    public CardView btn_report;
+    public CardView btn_setting;
 
+    public Button btn_map;
+
+//    public Button btn_mylocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,50 +36,58 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        btn_open = (CardView) findViewById(R.id.btn_open);
+        btn_report = (CardView) findViewById(R.id.btn_report);
+        btn_buy = (CardView) findViewById(R.id.btn_buy);
+        btn_setting = (CardView) findViewById(R.id.btn_setting);
         btn_map = (Button) findViewById(R.id.btn_map);
-        btn_open = (Button) findViewById(R.id.btn_open);
-        btn_report = (Button) findViewById(R.id.btn_report);
-        btn_buy = (Button) findViewById(R.id.btn_buy);
-        btn_setting = (Button) findViewById(R.id.btn_setting);
 
+
+//        btn_mylocation = (Button)findViewById(R.id.btn_mylocation);
+
+        btn_open.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Toast.makeText(MainActivity.this, "문이 열렸습니다. ", Toast.LENGTH_SHORT).show();
+                startActivity(intent);
+
+                finish();
+//                NetworkManager.getInstance().getUserSignUp("aaaa", "f", "010", "1234", "1234", new NetworkManager.OnResultListener<SignUpResult>() {
+//                    @Override
+//                    public void onSuccess(Request request, SignUpResult result) {
+//                        SignUpResult data = result;
+//                        Toast.makeText(MainActivity.this, data.getStatus().toString(), Toast.LENGTH_LONG).show();
+//
+//                    }
+//
+//                    @Override
+//                    public void onFail(Request request, IOException exception) {
+//
+//                    }
+//                });
+            }
+        });
 
         btn_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), Maps.class);
-                Toast.makeText(MainActivity.this, "지도 클릭 확인", Toast.LENGTH_SHORT).show();
                 startActivity(intent);
 
-                finish();
-
-
             }
         });
 
-        btn_open.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                Toast.makeText(MainActivity.this, "문이 열렸습니다. ", Toast.LENGTH_SHORT).show();
+//        btn_mylocation.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getApplicationContext(), MyLocation.class);
 //                startActivity(intent);
+//
+//            }
+//        });
 
-//                finish();
-                NetworkManager.getInstance().getUserSignUp("aaaa", "f", "010", "1234", "1234", new NetworkManager.OnResultListener<SignUpResult>() {
-                    @Override
-                    public void onSuccess(Request request, SignUpResult result) {
-                        SignUpResult data = result;
-                        Toast.makeText(MainActivity.this, data.getStatus().toString(), Toast.LENGTH_LONG).show();
 
-                    }
-
-                    @Override
-                    public void onFail(Request request, IOException exception) {
-
-                    }
-                });
-            }
-        });
         btn_report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,17 +114,6 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-
-
-//        fab李� 臾몄옄硫붿떆吏��벑 �렪�쓽湲곕뒫 媛��뒫�븷 寃껋엫. �뾼�꽑�삤�뿉寃� 硫붿꽭吏�蹂대궡湲� �벑.
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

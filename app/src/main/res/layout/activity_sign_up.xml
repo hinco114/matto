@@ -21,39 +21,44 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
-        android:id="@+id/et_id"
+        android:id="@+id/et_Id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Id" />
+        android:hint="Id"
+        android:singleLine="true"/>
 
     <EditText
         android:id="@+id/et_Password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Password" />
+        android:hint="Password"
+        android:singleLine="true"/>
 
     <EditText
-        android:id="@+id/et_PasswordConfirm"
+        android:id="@+id/et_SecondPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Password" />
+        android:hint="SecondPassword"
+        android:singleLine="true"/>
 
     <EditText
         android:id="@+id/et_Sex"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Sex" />
+        android:hint="Sex"
+        android:singleLine="true"/>
 
     <EditText
         android:id="@+id/et_CellPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="CellPhone" />
+        android:hint="CellPhone"
+        android:singleLine="true"/>
 
 
     <LinearLayout

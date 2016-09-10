@@ -47,7 +47,7 @@ public class Login extends AppCompatActivity {
 
             }
         });
-
+//커밋용
         btn_exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

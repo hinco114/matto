@@ -73,10 +73,17 @@ function getToiletInfo(req, res) {
 			toilet_info : null
 	}
 	models.Toilet.findById(idx).then(function(ret) {
-		console.log(ret);
-		result.status = 'S';
-		result.toilet_info = ret;
-		res.json(result);
+		if(ret == null) {
+			res.status(400);
+			result.status = 'F';
+			result.reason = 'not find toilet';
+			res.json(result);
+		} else {
+			console.log(ret);
+			result.status = 'S';
+			result.report_info = ret;
+			res.json(result);
+		}
 	}, function(err) {
 			console.log(err);
 			res.status(400);

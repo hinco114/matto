@@ -15,6 +15,7 @@ var memberService = require('./routes/memberService');
 var productService = require('./routes/productService');
 var toiletService = require('./routes/toiletService');
 var toiletProductService = require('./routes/toiletProductService');
+var reportService = require('./routes/reportService');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -41,7 +42,7 @@ app.use('/api/0.1v',memberService);
 app.use('/api/0.1v',productService);
 app.use('/api/0.1v',toiletProductService);
 app.use('/api/0.1v',toiletService);
-
+app.use('/api/0.1v',reportService);
 
 app.get('/',function(req,res){
    res.end('SERVER TEST'); 

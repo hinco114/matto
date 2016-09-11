@@ -4,28 +4,28 @@ var async = require('async');
 var models = require('../models');
 var passport = require('passport');
 
-// 화장실 등록
-router.post('/toilets', registToiletInfo);
-// 화장실정보 수정
-router.put('/toilets/:idx', modifyToiletInfo);
-// 화장실정보 개별조회
-router.get('/toilets/:idx', getToiletInfo);
-// 화장실정보 전체조회
-router.get('/toilets', getAllToiletInfo);
-// 화장실정보 삭제 
-router.delete('/toilets/:idx', deleteToiletInfo);
+// 신고 등록
+router.post('/reports', registReportInfo);
+// 신고 수정
+router.put('/reports/:idx', modifyReportInfo);
+// 신고 개별조회
+router.get('/reports/:idx', getReportInfo);
+// 신고 전체조회
+router.get('/reports', getAllReportInfo);
+// 신고 삭제 
+router.delete('/reports/:idx', deleteReportInfo);
 
-// 화장실 등록 함수 
-function registToiletInfo(req, res) {
-   var toiletInfo = req.body;
+// 신고 등록 함수 
+function registReportInfo(req, res) {
+   var reportInfo = req.body;
    var result = {
-		   toilet_idx : null,
+		   report_idx : null,
 		   status : null,
 		   reason : null
    }
-   models.Toilet.create(toiletInfo).then(function(ret) {
+   models.Report.create(reportInfo).then(function(ret) {
       console.log(ret);
-      result.toilet_idx = ret.toiletIdx;
+      result.report_idx = ret.reportIdx;
       result.status = 'S';
       res.json(result);
    }, function(err) {
@@ -34,20 +34,20 @@ function registToiletInfo(req, res) {
 	   })
 }
 
-// 화장실정보 수정 함수 
-function modifyToiletInfo(req, res) {
-	var toiletInfo = req.body;
+// 신고 수정 함수 
+function modifyReportInfo(req, res) {
+	var reportInfo = req.body;
 	var result = {
-			toilet_idx : req.params.idx,
+			report_idx : req.params.idx,
 			status : null,
 			reason : null
 	}
 	var where = {
 			where : {
-				toiletIdx : req.params.idx
+				reportIdx : req.params.idx
 			}
 	};
-	models.Toilet.update(toiletInfo, where).then(function(ret) {
+	models.Report.update(reportInfo, where).then(function(ret) {
 		console.log(ret);
 		if (ret == 1) {
 			result.status = 'S';
@@ -64,19 +64,19 @@ function modifyToiletInfo(req, res) {
 		})
 }
 
-// 화장실정보 개별조회 함수 
-function getToiletInfo(req, res) {
+// 신고 개별조회 함수 
+function getReportInfo(req, res) {
 	var idx = req.params.idx;
 	var result = {
 			status : null,
 			reason : null,
-			toilet_info : null
+			report_info : null
 	}
-	models.Toilet.findById(idx).then(function(ret) {
+	models.Report.findById(idx).then(function(ret) {
 		if(ret == null) {
 			res.status(400);
 			result.status = 'F';
-			result.reason = 'not find toilet';
+			result.reason = 'not find report';
 			res.json(result);
 		} else {
 			console.log(ret);
@@ -94,27 +94,27 @@ function getToiletInfo(req, res) {
 }
 
 // 화장실정보 전체조회 함수
-function getAllToiletInfo(req, res) {
+function getAllReportInfo(req, res) {
 	// 쿼리스트링 offset
 	var qOffset = parseInt(req.query.offset);
 	var result = {
 			status : null,
 			reason : null,
 			lastOffset : null,
-			toilets : null
+			reports : null
 	}
-	models.Toilet.findAll({offset : qOffset, limit : 20}).then(
+	models.Report.findAll({offset : qOffset, limit : 20}).then(
 			function(ret){
 				if(ret.length == 0){
 					res.status(400);
 					result.status = 'F';
-					result.reason = 'not find toilet';
+					result.reason = 'not find report';
 					
 				}else{
 					console.log(ret);
 					result.status = 'S';
 					result.lastOffset = qOffset + ret.length;
-					result.toilets = ret;
+					result.reports = ret;
 				}
 				res.json(result);
 			}, function(err){
@@ -126,18 +126,18 @@ function getAllToiletInfo(req, res) {
 }
 
 // 화장실정보 삭제 함수 
-function deleteToiletInfo(req, res) {
+function deleteReportInfo(req, res) {
 	var idx = req.params.idx;
 	var result = {
 			status : null,
 			reason : null,
-			toilet_idx : null
+			report_idx : null
 	}
-	models.Toilet.destroy({where: {toiletIdx : idx}}).then(function(ret) {
+	models.Report.destroy({where: {reportIdx : idx}}).then(function(ret) {
 		if (ret == 1) {
 			console.log(ret);
 			result.status = 'S';
-			result.toilet_idx = ret;
+			result.report_idx = ret;
 		} else {
 			res.status(400);
 			result.status = 'F';

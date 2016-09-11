@@ -145,13 +145,6 @@ function getMemberInfo(req, res) {
 
 function getAllMemberInfo(req,res){
 	var qOffset = parseInt(req.query.offset);
-	var result ={
-			status : null,
-			reason : null,
-			lastOffset : null,
-			members : null
-	}
-	
 	models.Member.findAll({attributes : [ 'id', 'gender', 'phoneNum'], offset : qOffset, limit : 20}).then(
 			function(ret){
 				if(ret.length == 0){

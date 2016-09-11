@@ -5,11 +5,12 @@ var session = require('express-session');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
+var winston = require('winston');;
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 //Login Authenticate
 var passport = require('passport');
-//var passport_config = require('./routes/passport');
+var passport_config = require('./routes/passport');
 var memberService = require('./routes/memberService');
 var productService = require('./routes/productService');
 var toiletService = require('./routes/toiletService');
@@ -30,7 +31,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-//passport_config();
+passport_config();
 
 //front-end resource static path
 app.use(express.static(path.join(__dirname, 'public')));

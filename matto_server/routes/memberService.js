@@ -4,11 +4,22 @@ var router = express.Router();
 var async = require('async');
 var models = require('../models');
 var passport = require('passport');
+var auth = require('./auth');
 
-/*
- * router.post('/login',passport.authrenticate('local'), function(req, res) {
- * console.log('login ok'); res.end('login'); })
- */
+
+var ResultModel = function(status, reason, data) {
+	this.status = status;
+	this.reason = reason;
+	this.resultData = data;
+};
+
+//로그인
+router.post('/login', getAccessToken);
+
+router.get('/login_check',auth.isAuthenticated(),function(req,res){
+	res.send(req.member);	
+});
+
 
 // 회원가입
 router.post('/members', registMember);
@@ -22,58 +33,44 @@ router.get('/members/:id', getMemberInfo);
 router.delete('/members/:id', deleteMemberInfo);
 
 
+//로그인-토큰획득
+function getAccessToken(req,res,next){
+		// custom callback
+		passport.authenticate('local', function(err, member, info){
+			var error = err||info
+			if(err){ 
+				console.log(error);
+				return res.status(400).json(new ResultModel('F', error, null));
+			}
+			if(!member) {
+				return res.status(400).json(new ResultModel('F', 'not exists', null)); 
+			}
+			var token = auth.signToken(member.id);
+			res.json(new ResultModel('S', null, {access_token : token}));
+			
+		})(req,res,next);
+}
 
-
-router.get('/login', function(req, res) {
-	res.end('login get');
-})
-
-router.get('/logout', function(req, res) {
-	req.logout();
-	res.end('LOGOUT');
-})
 
 // 회원 가입 함수
 function registMember(req, res) {
 	var member = req.body;
-	var result = {
-		id : member.id,
-		status : null,
-		reason : null
-	};
-
+	member.salt = models.Member.createSalt();
+	member.pwd = models.Member.createHashPwd(member.pwd, member.salt);
 	models.Member.create(member).then(function() {
-		res.status(201);
-		result.status = 'S';
-		res.json(result);
+		res.status(200).json(new ResultModel('S', null, null));
 	}, function(err) {
-		res.status(400);
-		console.log(err);
-		result.status = 'F';
-		result.reason = err.errors[0]['message'];
-		res.json(result);
+		res.status(400).json(new ResultModel('F', err.message, null));
 	});
 
 }
 
-
-
 // 회원 정보 수정
 function modifyMemberInfo(req, res) {
 	var member = req.body;
-	var result = {
-		id : member.id,
-		status : null,
-		reason : null
-	};
 	// 조건문
-	var where = {
-		where : {
-			id : req.params.id
-		}
-	};
+	var where = {where : {id : req.params.id}};
 
-	console.log(member);
 
 	// 비동기 waterfall
 	async.waterfall([ function(callback) {
@@ -110,14 +107,10 @@ function modifyMemberInfo(req, res) {
 	} ], function(err) {
 		// 에러시 에러 출력
 		if (err != null) {
-			res.status(400);
-			result.status = 'F';
-			result.reason = err;
+			res.status(400).json(new ResultModel('F',err ,null));
 		} else {
-			res.status(201);
-			result.status = 'S';
+			res.status(201).json(new ResultModel('S', null, null));
 		}
-		res.json(result);
 	});
 }
 
@@ -129,30 +122,24 @@ function getMemberInfo(req, res) {
 		type = '';
 	// 동적파라미터 id
 	var id = req.params.id;
-	var result = {
-		id : req.params.id,
-		status : null,
-		reason : null
-	};
 
 	models.Member.findById(id, {
 		attributes : [ 'id', 'gender', 'phoneNum' ]
 	}).then(function(member) {
+		var result;
 		// 조회 내역이 없으면
 		if (member == null) {
-			result.status = 'F';
-			result.reason = 'no exists member';
+			result = new ResultModel('F', 'no exists member', null);
 		}else{
-			result.status = 'S';
+			result = new ResultModel('S', null, null);
 		}
 		// type이 id가 아니면 mebers객체 추가
 		if (type != 'id') {
-			result.member = member;
+			result.data = member;
 		}
-		res.json(result);
+		res.status(200).json(result);
 	}, function(err) {
-		result.status = 'F';
-		res.json(result)
+		res.status(400).json(new ResultModel('F',err.errors[0]['message'], null));
 	});
 }
 
@@ -168,83 +155,36 @@ function getAllMemberInfo(req,res){
 	models.Member.findAll({attributes : [ 'id', 'gender', 'phoneNum'], offset : qOffset, limit : 20}).then(
 			function(ret){
 				if(ret.length == 0){
-					res.status(400);
-					result.status = 'F';
-					result.reason = 'not find member';
-					
+					res.status(400).json(new ResultModel('F', 'not find member', null));
 				}else{
 					console.log(ret);
-					result.status = 'S';
-					result.lastOffset = qOffset + ret.length;
-					result.members = ret;
+					var members = {
+							lastOffest : qOffset + ret.length,
+							members : ret
+					}
+					res.status(200).json(new ResultModel('S', null, members));
 				}
-				res.json(result);
 			}, function(err){
 				console.log(err);
-				result.status = 'F';
-				result.reason = err.message;
-				res.json(result);
+				res.status(400).json(new ResultModel('F', err.message, null));
 			});
 }
-
-
-
-
 
 // 회원정보 삭제
 function deleteMemberInfo(req,res){
 	console.log('DELETE');
 	var where = {where : {id : req.params.id}};
-	var result = {
-			id : req.params.id,
-			status : null,
-			reason : null
-		};	
 	models.Member.destroy(where).then(function(ret){
 		if(ret == 1){
 			result.status = 'S';
+			res.status(200).json(new ResultModel('S', null, null));
 		}
 		else {
-			result.status = 'F';
-			result.reason = 'delete fail';
-			res.status(400);			
+			res.status(400).json(new ResultModel('F', 'delete failed', null));
 		}
-		res.json(result);
 	}, function(err){
-		result.status = 'F';
-		result.reason = err.message;
-		res.json(result);
+		res.status(400).json(new ResultModel('F',err.message,null));
 	});
 }
 
-
-
-
-/*
- * router.get('/member/dup/:id',checkDuplicate);
- * router.get('/member/info/:id',showMemberInfo)
- * router.post('/member/signin',registMember);
- * 
- * router.get('/login_verify', isAuthenticated, verifyLogin);
- * 
- * function isAuthenticated(req,res,next) { if(req.isAuthenticated()){ return
- * next(); } res.end('NOT LOGIN'); } function verifyLogin(req,res) {
- * res.end('LOGIN OK'); }
- * 
- * function registMember(req,res){ var inputData = { id : req.body.id, pwd :
- * req.body.pwd, sex : req.body.sex, phoneNum : req.body.phoneNum };
- * Member.create(inputData).then(function(){ res.end(JSON.stringify({status :
- * 'success'})); },function (err) { console.log(err);
- * res.end(JSON.stringify({status : 'fail'})); }); }
- * 
- * function checkDuplicate(req,res) { var id = req.params.id;
- * Member.findById(id).then( function (result){ res.end(JSON.stringify({status :
- * 'success'}));}, function (err) { console.log(err);
- * res.end(JSON.stringify({status : 'fail'}));} ); }
- * 
- * function showMemberInfo(req,res) { var id = req.params.id;
- * Member.findById(id).then( function (result){
- * res.end(JSON.stringify(result));}, function (err) { console.log(err);
- * res.end(JSON.stringify({status : 'fail'}));} ); }
- */
 module.exports = router;

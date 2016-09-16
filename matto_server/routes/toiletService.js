@@ -14,6 +14,8 @@ router.get('/toilets/:idx', getToiletInfo);
 router.get('/toilets', getAllToiletInfo);
 // 화장실정보 삭제 
 router.delete('/toilets/:idx', deleteToiletInfo);
+// 화장실 검색
+router.get('/toiletFind', findToiletInfo);
 
 // 화장실 등록 함수 
 function registToiletInfo(req, res) {
@@ -152,5 +154,34 @@ function deleteToiletInfo(req, res) {
 			res.json(result);
 		})
 }
-
+// 근처 화장실 검색 함수
+function findToiletInfo(req, res){
+	var qLatitude = parseFloat(req.query.latitude);
+	var qLongitude = parseFloat(req.query.longitude);
+	var result = {
+			status : null,
+			reason : null,
+			toilets : null
+	}
+	models.Toilet.sequelize.query('SELECT toiletIdx, name, ( 6171 * acos( cos( radians(:qLatitude)) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(:qLongitude) ) + sin( radians(:qLatitude) ) * sin( radians( latitude ) ) ) ) AS distance FROM toilets HAVING distance < 10 ORDER BY distance LIMIT 0, 5', {replacements : { qLatitude : qLatitude, qLongitude : qLongitude}})
+	.then(function(ret){
+		if(ret == null) {
+			res.status(400);
+			result.status = 'F';
+			result.reason = 'not find toilet';
+			res.json(result);
+		} else {
+			console.log(ret[0]);
+			result.status = 'S';
+			result.toilets = ret[0];
+			res.json(result);
+		}
+	}, function(err) {
+			console.log(err);
+			res.status(400);
+			result.status = 'F';
+			result.reason = err.message;
+			res.json(result);
+		})
+}
 module.exports = router;

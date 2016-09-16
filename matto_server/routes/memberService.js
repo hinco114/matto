@@ -13,11 +13,11 @@ var ResultModel = function(status, reason, data) {
 	this.resultData = data;
 };
 
-//로그인
+// 로그인
 router.post('/login', getAccessToken);
 
 router.get('/login_check',auth.isAuthenticated(),function(req,res){
-	res.send(req.member);	
+	res.send(req.user);	
 });
 
 
@@ -27,13 +27,15 @@ router.post('/members', registMember);
 router.put('/members/:id', modifyMemberInfo);
 // 회원 정보 전체 조회
 router.get('/members', getAllMemberInfo);
+// 내 정보 조회
+// router.get('/members/me', getMyInfo);
 // 회원 정보 조회
 router.get('/members/:id', getMemberInfo);
 // 회원 정보 삭제
 router.delete('/members/:id', deleteMemberInfo);
 
 
-//로그인-토큰획득
+// 로그인-토큰획득
 function getAccessToken(req,res,next){
 		// custom callback
 		passport.authenticate('local', function(err, member, info){
@@ -45,7 +47,7 @@ function getAccessToken(req,res,next){
 			if(!member) {
 				return res.status(400).json(new ResultModel('F', 'not exists', null)); 
 			}
-			var token = auth.signToken(member.id);
+			var token = auth.signToken(member);
 			res.json(new ResultModel('S', null, {access_token : token}));
 			
 		})(req,res,next);
@@ -73,37 +75,38 @@ function modifyMemberInfo(req, res) {
 
 
 	// 비동기 waterfall
-	async.waterfall([ function(callback) {
-		// 파라미터와 body의 id 불일치
-		if (member.id != req.params.id) {
-			callback('no match id');
-		} else {
-			callback();
-		}
-	}, function(callback) {
+	async.waterfall([function(callback) {
 		// 아이디 존재 유무 확인
-		models.Member.findById(member.id).then(function(memInfo) {
-			callback(memInfo, callback)
+		models.Member.findById(req.params.id).then(function(memInfo) {
+			callback(null, memInfo)
 		}, function() {
-			callback('not exists member', member);
+			callback('not exists member');
 		});
 	}, function(memInfo, callback) {
 		// 비밀번호 존재 유무 확인
-		if (memInfo.pwd != member.pwd) {
+		console.log(memInfo);
+		console.log(member.pwd);
+		console.log(memInfo.pwd);
+		if (!memInfo.matchPassword(member.pwd)) {
 			callback('no match password');
+		}else{
+			callback(null, memInfo);
 		}
-		callback();
-	}, function(callback) {
+	}, function(memInfo, callback) {
 		// 수정 시간 갱신
+		console.log(memInfo);
+		console.log(member.ndPwd);
 		member.updatedAt = models.Sequelize.fn('NOW');
+		if(member.ndPwd != undefined) memInfo.setNdPwd(member.ndPwd);
+		if(member.chgPwd != undefined) memInfo.changePassword(member.chgPwd);
+		memInfo.setNewInfo(member);
 		console.log(member);
-		models.Member.update(member, where).then(function() {
+		models.Member.update(memInfo.dataValues, where).then(function() {
 			callback();
 		}, function(err) {
-			console.log(err);
-			callback(err.errors[0]['message']);
+			console.log("에러 ::::"+err);
+			callback(err.message);
 		});
-
 	} ], function(err) {
 		// 에러시 에러 출력
 		if (err != null) {
@@ -113,6 +116,7 @@ function modifyMemberInfo(req, res) {
 		}
 	});
 }
+
 
 // 회원 정보 반환
 function getMemberInfo(req, res) {
@@ -135,7 +139,7 @@ function getMemberInfo(req, res) {
 		}
 		// type이 id가 아니면 mebers객체 추가
 		if (type != 'id') {
-			result.data = member;
+			result.resultData = {member : member};
 		}
 		res.status(200).json(result);
 	}, function(err) {
@@ -179,5 +183,7 @@ function deleteMemberInfo(req,res){
 		res.status(400).json(new ResultModel('F',err.message,null));
 	});
 }
+
+
 
 module.exports = router;

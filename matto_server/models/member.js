@@ -6,6 +6,7 @@ module.exports = function(sequelize, DataTypes) {
 	  var member = sequelize.define("Member", {
 	    id : {type : DataTypes.STRING(15), primaryKey : true, allowNull : false},
 	    pwd : {type : DataTypes.STRING(64), allowNull : false},
+	    name : {type : DataTypes.STRING(30), allowNuall : false},
 	    salt : {type : DataTypes.STRING(64)},
 	    ndPwd : {type : DataTypes.STRING(15), allowNull : true},
 	    gender : {type : DataTypes.STRING(1), allowNull : false},
@@ -27,8 +28,30 @@ module.exports = function(sequelize, DataTypes) {
 		    instanceMethods : {
 		    	//비밀번호 확인
 		    	matchPassword : function(password){
+		    		 console.log(member.createHashPwd(password, this.salt));
 		    		return member.createHashPwd(password, this.salt) === this.pwd;
-		    	} 
+		    	},
+		    	matchNdPwd : function(ndPwd){
+		    		return member.createHashPwd(ndPwd, this.salt) === this.ndPwd;
+		    	},
+		    	changePassword : function(newPwd){
+		    		this.pwd = member.createHashPwd(newPwd, this.salt);
+		    		console.log(this.pwd);
+		    	},
+		    	setNdPwd : function(ndPwd){
+		    		this.ndPwd = member.createHashPwd(ndPwd, this.salt);
+		    		console.log(ndPwd);
+		    	},
+		    	setNewInfo : function(member){
+		    		for(var key in member){
+		    			if(key != "ndPwd" && key !== "pwd" && key !="chgPwd"){
+		    				this[key] = member[key];
+		    			}
+		    		}
+		    	},
+		    	matchNdPwd : function(ndPwd){
+		    		return member.createHashPwd(ndPwd, this.salt) === this.ndPwd;
+		    	}
 		    },
 		    tableName: 'members',
 		    freezeTableName: true,

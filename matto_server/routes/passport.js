@@ -21,7 +21,7 @@ module.exports = function() {
 				return done(null, false);
 			}
 			// unvalid password
-			if (member.matchPassword(member.pwd)) {
+			if (!member.matchPassword(pwd)) {
 				console.log('no match');
 				return done(null, false);
 			}

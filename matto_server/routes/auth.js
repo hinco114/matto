@@ -12,9 +12,18 @@ var validateJwt = require('express-jwt')({
 });
 
 // 아이디 기반으로 토큰 생성
-function signToken(id) {
+function signToken(member) {
+	
+	var token = {};
+	for(var key in member.dataValues){
+		if(key !='pwd' && key!='ndPwd' && key!='salt'&&typeof(member[key])==='string'){
+			token[key] = member[key];
+			console.log(key+":::::::::::::::::::::"+token[key]);
+		}
+		
+	}
 	return jwt.sign({
-		id : id
+		info : token
 	}, SECRET_KEY, {
 		expiresIn : EXPIRES
 	});
@@ -45,9 +54,6 @@ function isAuthenticated() {
 		}
 		validateJwt(req,res,next);
 	}).use(function(req,res,next){
-		req.member = {
-			id : req.user.id
-		};
 		next();
 	});
 }

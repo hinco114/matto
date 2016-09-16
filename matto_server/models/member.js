@@ -28,19 +28,16 @@ module.exports = function(sequelize, DataTypes) {
 		    instanceMethods : {
 		    	//비밀번호 확인
 		    	matchPassword : function(password){
-		    		 console.log(member.createHashPwd(password, this.salt));
-		    		return member.createHashPwd(password, this.salt) === this.pwd;
+ 		    		return member.createHashPwd(password, this.salt) === this.pwd;
 		    	},
 		    	matchNdPwd : function(ndPwd){
 		    		return member.createHashPwd(ndPwd, this.salt) === this.ndPwd;
 		    	},
 		    	changePassword : function(newPwd){
 		    		this.pwd = member.createHashPwd(newPwd, this.salt);
-		    		console.log(this.pwd);
 		    	},
 		    	setNdPwd : function(ndPwd){
 		    		this.ndPwd = member.createHashPwd(ndPwd, this.salt);
-		    		console.log(ndPwd);
 		    	},
 		    	setNewInfo : function(member){
 		    		for(var key in member){

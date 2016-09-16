@@ -18,7 +18,6 @@ function signToken(member) {
 	for(var key in member.dataValues){
 		if(key !='pwd' && key!='ndPwd' && key!='salt'&&typeof(member[key])==='string'){
 			token[key] = member[key];
-			console.log(key+":::::::::::::::::::::"+token[key]);
 		}
 		
 	}

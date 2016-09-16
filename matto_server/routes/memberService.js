@@ -5,6 +5,7 @@ var async = require('async');
 var models = require('../models');
 var passport = require('passport');
 var auth = require('./auth');
+var logger = require('../utils/logger');
 
 
 var ResultModel = function(status, reason, data) {
@@ -41,7 +42,6 @@ function getAccessToken(req,res,next){
 		passport.authenticate('local', function(err, member, info){
 			var error = err||info
 			if(err){ 
-				console.log(error);
 				return res.status(400).json(new ResultModel('F', error, null));
 			}
 			if(!member) {

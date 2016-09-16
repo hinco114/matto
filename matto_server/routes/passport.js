@@ -12,10 +12,7 @@ module.exports = function() {
 		passwordField : 'pwd',
 	}, function(id, pwd, done) {
 		models.Member.findById(id).then(function(member) {
-			console.log(id, pwd);
-			console.log(member);
 			// not find member
-			console.log(member.pwd)
 			if (!member) {
 				console.log('not find');
 				return done(null, false);

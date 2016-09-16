@@ -1,0 +1,1 @@
+alter table members add column salt char(16);

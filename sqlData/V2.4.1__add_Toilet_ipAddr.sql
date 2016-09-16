@@ -1,0 +1,1 @@
+alter table toilets add column ipAddr char(64) after beaconId;

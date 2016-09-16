@@ -1,0 +1,1 @@
+alter table toilets add column type char(1);

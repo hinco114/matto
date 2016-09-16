@@ -1,0 +1,1 @@
+alter table members modify pwd char(64), modify salt char(64);

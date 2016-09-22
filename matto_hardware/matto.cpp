@@ -1,15 +1,16 @@
 /*********************************************************************
 Matto Project
-2016-09-13
+2016-09-23
 
 시리얼 통신 프로토콜
-아두이노가 읽는 방법 [상태,명령어,값]
+아두이노가 읽는 방법 [명령어,값]
 아두이노가 보내는 방법 [상태,값1이름,값1,값2이름,값2]
 에러의 경우 [F,REASON,이유]
 
 적용된 명령어
 1. DOPEN = 문 열기
 2. DHT = 온도 습도 정보 보내기 [tem,온도,hum,습도]
+3. TISSUE = 휴지센서 값 받기
 
 핀번호 매칭 다시 해야함.
 DoorOpen 함수 구현 필요
@@ -41,7 +42,8 @@ int interval = 700;		//입구센서 카운트 딜레이
 float distance_enter = 30.0;
 
 //핀 셋팅
-int tissue_pin[2]={3,4};		//휴지센서
+int tissue_pin=4;		//휴지센서
+int tissue_led=5;		//휴지 LED
 char door_inner_pin=A0;		//입구 안쪽센서
 char door_outter_pin=A1;	//입구 바깥쪽센서
 int doorlock_pin=3;		//도어락(서보모터)
@@ -49,7 +51,7 @@ int doorlock_pin=3;		//도어락(서보모터)
 
 //센서값
 float door_sens[2];
-int tissue_sens[2];
+int tissue_sens;
 int sector_sens[2];
 int number_person=0;
 
@@ -63,12 +65,14 @@ void setup(){
 	Serial.begin(9600);
 	dht.begin();	//온습도센서 구현. 센싱에 250ms 소요
 	doorlock.attach(doorlock_pin);	//도어락 연결
+	pinMode(tissue_led,OUTPUT);
 }
 
 void loop(){
 	current_time = millis();
 	sensing_door(door_inner_pin,door_outter_pin);	//입구센서 센싱
 	doorCount();	//센싱값으로 인원처리
+	sensing_tissue();	//휴지센서 처리
 	if(Serial.available()){
 		fromSerial();	//시리얼통신으로 받을게 있으면 커뮤니케이션 함수 실행
 	}
@@ -79,8 +83,8 @@ void loop(){
 
 // ----------------------------------통신부----------------------------------
 // [상태,값1이름,값1,값2이름,값2]형태로 시리얼 전송
-// dataName1이 "0"인 경우 상태만 전송함
-// 상태가 값1이름이 REASON인 경우 [status,REASON,내용] 전송
+// 값1이름이나 값2이름이이 "0"인 경우 
+// 상태가 0으로 동작이 실패한 경우, 값1이름으로 REASON을 받고 [status,REASON,내용] 전송
 void toSerial(int status,String dataName1,int data1,String dataName2,int data2){
 	char s = status==1?'S':'F';
 	Serial.print("[");
@@ -133,10 +137,21 @@ void parseData(String needParse){
 	String data = needParse.substring(needParse.indexOf(',')+1);
 	if(cmd == "DOPEN"){
 		// doorOpen();
+		doorlock.write(data.toInt());
+		
 		toSerial(1,"0",0,"0",0);
 	}
-	if(cmd == "DHT"){
+	else if(cmd == "DHT"){	//DHT명령인 경우 온습도 센싱 실행후 반환
 		sensing_dht();
+		if (isnan(humidity) || isnan(temperature)) {
+			toSerial(0,"REASON",0,"Failed to read from DHT sensor",0); 
+		}
+		else { 
+			toSerial(1,"TEM",temperature,"HUM",humidity);//시리얼 통신에 보냄
+		}
+	}
+	else if(cmd == "TISSUE"){	//TISSUE명령어인 경우 tissue_sens값 반환
+		toSerial(1,"Tissue Data",tissue_sens,"0",0);
 	}
 }
 // ----------------------------------통신부끝----------------------------------
@@ -146,19 +161,20 @@ void parseData(String needParse){
 
 // Delay 없이 타이머를 이용하고, 일정시간 지나면 문이 잠기도록 해야함
 void doorOpen(){
-	doorlock.write(0);
-	delay(500);
-	doorlock.write(90);
+	doorlock.write(21);
+	delay(1500);
+	doorlock.write(95);
+}
+
+void sensing_tissue(){
+	tissue_sens = digitalRead(tissue_pin);
+	//tissue_sens를 반전시킨 값으로 LED를 온/오프 (휴지가 부족한 경우 tissue_sens값이 0)
+	digitalWrite(tissue_led,tissue_sens==1?0:1);
 }
 
 void sensing_dht(){
 	humidity = dht.readHumidity();  //습도
 	temperature = dht.readTemperature();  //온도 (C)
-	if (isnan(humidity) || isnan(temperature)) {
-		toSerial(0,"REASON",0,"Failed to read from DHT sensor",0); 
-		return;
-	}
-	toSerial(1,"TEM",temperature,"HUM",humidity);//시리얼 통신에 보냄
 }
 
 //입구센서 센싱

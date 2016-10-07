@@ -22,8 +22,10 @@ router.get('/login_check',auth.isAuthenticated(),function(req,res){
 
 // 회원가입
 router.post('/members', registMember);
-// 회원정보 수정 waterfall 적용 *
-router.put('/members/:id', auth.isAuthenticated(), checkAuth, modifyMemberInfo);
+// 회원정보 수정 waterfall 적용
+router.put('/members/:id', auth.isAuthenticated(), checkId, modifyMemberInfo);
+// 마또관리자 회원정보 수정 
+router.put('/members/authentic/:id', auth.isAuthenticated(), checkAuth, modifyMemberInfo_authentic);
 // 회원 정보 전체 조회 관리자 *
 router.get('/members', auth.isAuthenticated(), findUsers, getAllMemberInfo);
 // 내 정보 조회 *
@@ -51,17 +53,28 @@ function getAccessToken(req,res,next){
 		})(req,res,next);
 }
 
-// 접근 id 비교
+// matto 관리자 확인
 function checkAuth(req, res, next){
-	var userId = req.user.info.id;
-	var paramsId = req.params.id;
+	var userAuth = req.user.info.auth;
 
-	if(userId != paramsId && userId != 'root'){
-		res.status(400).json(new ResultModel('F', 'no Authority', null));
+	if(userAuth != "M"){
+		res.status(400).json(new ResultModel('F', '접근권한이 없습니다.', null));
 	} else {
 		next();
 	}
 }
+// 접근 id 비교 (자신의 아이디만 수정가능)
+function checkId(req, res, next){
+	var userId = req.user.info.id;
+	var paramsId = req.params.id;
+
+	if(userId != paramsId){
+		res.status(400).json(new ResultModel('F', 'checkAuth. no Authority', null));
+	} else {
+		next();
+	}
+}
+
 // 관리자 확인(개별조회, 전체조회) 
 function findUsers(req, res, next){
 	var userId = req.user.info.id;
@@ -90,7 +103,6 @@ function modifyMemberInfo(req, res) {
 	var member = req.body;
 	// 조건문
 	var where = {where : {id : req.params.id}};
-
 
 	// 비동기 waterfall
 	async.waterfall([function(callback) {
@@ -134,6 +146,48 @@ function modifyMemberInfo(req, res) {
 		}
 	});
 }
+
+// 관리자용 회원 정보 수정
+function modifyMemberInfo_authentic(req, res) {
+	var member = req.body;
+	// 조건문
+	var where = {where : {id : req.params.id}};
+
+	// 비동기 waterfall
+	async.waterfall([function(callback) {
+		// 아이디 존재 유무 확인
+		models.Member.findById(req.params.id).then(function(memInfo) {
+			callback(null, memInfo)
+		}, function() {
+			callback('not exists member');
+		});
+	}, function(memInfo, callback) {
+		// 수정 시간 갱신
+		console.log(memInfo);
+		console.log(member.ndPwd);
+		member.updatedAt = models.Sequelize.fn('NOW');
+		memInfo.setNewInfo(member);
+		console.log(member);
+		if(member.ndPwd != undefined) memInfo.setNdPwd(member.ndPwd);
+		if(member.pwd != undefined) memInfo.changePassword(member.pwd);
+		memInfo.setNewInfo(member);
+		console.log(member);
+		models.Member.update(memInfo.dataValues, where).then(function() {
+			callback();
+		}, function(err) {
+			console.log("에러 ::::"+err);
+			callback(err.message);
+		});
+	} ], function(err) {
+		// 에러시 에러 출력
+		if (err != null) {
+			res.status(400).json(new ResultModel('F',err ,null));
+		} else {
+			res.status(201).json(new ResultModel('S', null, null));
+		}
+	});
+}
+
 // 내 정보 반환
 function getMyInfo(req, res) {
 	var userInfo = req.user.info;

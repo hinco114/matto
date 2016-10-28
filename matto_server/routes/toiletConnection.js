@@ -114,6 +114,9 @@ function requestToilet(cmdReq, callback){
 	})
 };
 
+//function saveGenderInfo(cmdReq, callback){
+//	var 
+//}
 function test(){
 	request({
 		url : 'http://'+toilet.ipAddr+'/'+cmd,

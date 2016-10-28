@@ -5,6 +5,12 @@ var compose = require('composable-middleware');
 var SECRET_KEY = 'matto_access_token';// 임시
 var EXPIRES = "1h";
 
+var ResultModel = function(status, reason, data) {
+	this.status = status;
+	this.reason = reason;
+	this.resultData = data;
+};
+
 
 //express-jwt를 이용해 토큰을 분석한다.
 var validateJwt = require('express-jwt')({
@@ -19,7 +25,6 @@ function signToken(member) {
 		if(key !='pwd' && key!='ndPwd' && key!='salt'&&typeof(member[key])==='string'){
 			token[key] = member[key];
 		}
-		
 	}
 	return jwt.sign({
 		info : token

@@ -3,20 +3,41 @@ var router = express.Router();
 var async = require('async');
 var models = require('../models');
 var passport = require('passport');
+var auth = require('./auth');
+
+
+/* 화장실에 대한 권한은 root, 화장실 관리자 */
 
 // 화장실 등록
-router.post('/toilets', registToiletInfo);
+router.post('/toilets', auth.isAuthenticated(), checkAuth, registToiletInfo);
 // 화장실정보 수정
-router.put('/toilets/:idx', modifyToiletInfo);
+router.put('/toilets/:idx', auth.isAuthenticated(), checkAuth, modifyToiletInfo);
 // 화장실정보 개별조회
-router.get('/toilets/:idx', getToiletInfo);
+router.get('/toilets/:idx', auth.isAuthenticated(), getToiletInfo);
 // 화장실정보 전체조회
-router.get('/toilets', getAllToiletInfo);
+router.get('/toilets', auth.isAuthenticated(), getAllToiletInfo); // .../toilets?offset=0
 // 화장실정보 삭제 
-router.delete('/toilets/:idx', deleteToiletInfo);
+router.delete('/toilets/:idx', auth.isAuthenticated(), checkAuth, deleteToiletInfo);
 // 화장실 검색
-router.get('/toiletFind', findToiletInfo);
+router.get('/toiletFind', auth.isAuthenticated(), findToiletInfo); // .../toiletFind?latitude= &longitude=
 
+
+var ResultModel = function(status, reason, data) {
+	this.status = status;
+	this.reason = reason;
+	this.resultData = data;
+};
+
+//관리자 권한검사 ( 현재는 root 계정만 권한 획득 ) 
+function checkAuth(req, res, next){
+	var userId = req.user.info.id;
+	
+	if(userId != 'root'){
+		res.status(400).json(new ResultModel('F', 'checkAuth. no Authority', null));
+	} else {
+		next();
+	}
+}
 // 화장실 등록 함수 
 function registToiletInfo(req, res) {
    var toiletInfo = req.body;

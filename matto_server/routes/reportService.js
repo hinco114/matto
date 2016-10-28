@@ -93,7 +93,7 @@ function getReportInfo(req, res) {
 		})
 }
 
-// 화장실정보 전체조회 함수
+//  신고 전체조회 함수
 function getAllReportInfo(req, res) {
 	// 쿼리스트링 offset
 	var qOffset = parseInt(req.query.offset);
@@ -125,7 +125,7 @@ function getAllReportInfo(req, res) {
 			})
 }
 
-// 화장실정보 삭제 함수 
+// 신고 삭제 함수 
 function deleteReportInfo(req, res) {
 	var idx = req.params.idx;
 	var result = {

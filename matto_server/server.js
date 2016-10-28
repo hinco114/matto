@@ -1,6 +1,5 @@
 var express = require('express');
 var app = express();
-
 var session = require('express-session');
 var path = require('path');
 var favicon = require('serve-favicon');

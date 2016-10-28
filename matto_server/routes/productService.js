@@ -5,11 +5,11 @@ var async = require('async');
 var models = require('../models');
 var passport = require('passport');
 
-router.post('/products', registProductInfo);
-router.put('/products/:idx', modifyProductInfo);
-router.delete('/products/:idx', deleteProductInfo);
-router.get('/products/:idx',getProductInfo);
-router.get('/products',getAllProductsInfo);
+router.post('/products', registProductInfo); // 상품 등록 
+router.put('/products/:idx', modifyProductInfo); // 상품 수정 
+router.delete('/products/:idx', deleteProductInfo); // 상품 삭제 
+router.get('/products/:idx',getProductInfo); // 상품 개별조회 
+router.get('/products',getAllProductsInfo); // 상품 전체조회 
 
 function registProductInfo(req, res) {
 	var productInfo = req.body;

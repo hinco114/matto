@@ -26,21 +26,18 @@ router.post('/members', registMember);
 router.put('/members/:id', auth.isAuthenticated(), checkId, modifyMemberInfo);
 // 마또관리자 회원정보 수정 
 router.put('/members/authentic/:id', auth.isAuthenticated(), checkAuth, modifyMemberInfo_authentic);
-<<<<<<< HEAD
 // 회원 정보 전체 조회 관리자
 router.get('/members', auth.isAuthenticated(), findAllUsers, getAllMemberInfo);
 // 내 정보 조회
 router.get('/members/me', auth.isAuthenticated(), getMyInfo);
 // 회원 정보 조회
 router.get('/members/:id', auth.isAuthenticated(), findAllUsers, getMemberInfo);
-=======
 // 회원 정보 전체 조회 관리자 *
 router.get('/members', auth.isAuthenticated(), findUsers, getAllMemberInfo);
 // 내 정보 조회 *
 router.get('/members/me', auth.isAuthenticated(), getMyInfo);
 // 회원 정보 조회 *
 router.get('/members/:id', auth.isAuthenticated(), findUsers, getMemberInfo);
->>>>>>> 61d4d151596f2ff74b065428b3737f22ae2d5e04
 // 회원 정보 삭제 
 router.delete('/members/:id', deleteMemberInfo);
 

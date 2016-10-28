@@ -26,12 +26,21 @@ router.post('/members', registMember);
 router.put('/members/:id', auth.isAuthenticated(), checkId, modifyMemberInfo);
 // 마또관리자 회원정보 수정 
 router.put('/members/authentic/:id', auth.isAuthenticated(), checkAuth, modifyMemberInfo_authentic);
+<<<<<<< HEAD
 // 회원 정보 전체 조회 관리자
 router.get('/members', auth.isAuthenticated(), findAllUsers, getAllMemberInfo);
 // 내 정보 조회
 router.get('/members/me', auth.isAuthenticated(), getMyInfo);
 // 회원 정보 조회
 router.get('/members/:id', auth.isAuthenticated(), findAllUsers, getMemberInfo);
+=======
+// 회원 정보 전체 조회 관리자 *
+router.get('/members', auth.isAuthenticated(), findUsers, getAllMemberInfo);
+// 내 정보 조회 *
+router.get('/members/me', auth.isAuthenticated(), getMyInfo);
+// 회원 정보 조회 *
+router.get('/members/:id', auth.isAuthenticated(), findUsers, getMemberInfo);
+>>>>>>> 61d4d151596f2ff74b065428b3737f22ae2d5e04
 // 회원 정보 삭제 
 router.delete('/members/:id', deleteMemberInfo);
 
@@ -74,12 +83,22 @@ function checkId(req, res, next){
 		next();
 	}
 }
+<<<<<<< HEAD
 // 관리자 확인(개별조회, 전체조회) 
 function findAllUsers(req, res, next){
 	var userId = req.user.info.id;
 	
 	if(userId != 'root'){
 		res.status(400).json(new ResultModel('F', 'findAllUsers. no Authority', null));
+=======
+
+// 관리자 확인(개별조회, 전체조회) 
+function findUsers(req, res, next){
+	var userId = req.user.info.id;
+	
+	if(userId != 'root'){
+		res.status(400).json(new ResultModel('F', 'no Authority', null));
+>>>>>>> 61d4d151596f2ff74b065428b3737f22ae2d5e04
 	} else {
 		next();
 	}
@@ -102,6 +121,10 @@ function modifyMemberInfo(req, res) {
 	var member = req.body;
 	// 조건문
 	var where = {where : {id : req.params.id}};
+<<<<<<< HEAD
+=======
+
+>>>>>>> 61d4d151596f2ff74b065428b3737f22ae2d5e04
 	// 비동기 waterfall
 	async.waterfall([function(callback) {
 		// 아이디 존재 유무 확인
@@ -151,7 +174,10 @@ function modifyMemberInfo_authentic(req, res) {
 	// 조건문
 	var where = {where : {id : req.params.id}};
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 61d4d151596f2ff74b065428b3737f22ae2d5e04
 	// 비동기 waterfall
 	async.waterfall([function(callback) {
 		// 아이디 존재 유무 확인

@@ -21,12 +21,35 @@ router.delete('/toilets/:idx', auth.isAuthenticated(), checkAuth, deleteToiletIn
 // 화장실 검색
 router.get('/toiletFind', auth.isAuthenticated(), findToiletInfo); // .../toiletFind?latitude= &longitude=
 
+router.get('/toilets/getIdx/:beaconId', getToiletIdxFromBeaconID);
 
 var ResultModel = function(status, reason, data) {
 	this.status = status;
 	this.reason = reason;
 	this.resultData = data;
 };
+
+function getToiletIdxFromBeaconID(req, res, next){
+	var beaconId = req.params.beaconId;
+	var where = {
+				beaconId : beaconId 
+	};
+	
+	var result;
+	models.Toilet.findAll({attributes : ['toiletIdx'], where : where}).then(function(ret){
+		console.log(ret);
+		result = new ResultModel('S',null,ret); 
+		res.json(result);
+	},function(err){
+		console.log(err);
+		result = new ResultModel('F', err.message, null);
+		res.json(result);
+	});
+	
+	
+	
+}
+
 
 //관리자 권한검사 ( 현재는 root 계정만 권한 획득 ) 
 function checkAuth(req, res, next){

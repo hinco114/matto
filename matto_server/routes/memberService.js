@@ -80,22 +80,20 @@ function checkId(req, res, next){
 		next();
 	}
 }
-<<<<<<< HEAD
 // 관리자 확인(개별조회, 전체조회) 
 function findAllUsers(req, res, next){
 	var userId = req.user.info.id;
 	
 	if(userId != 'root'){
 		res.status(400).json(new ResultModel('F', 'findAllUsers. no Authority', null));
-=======
-
+	}
+};
 // 관리자 확인(개별조회, 전체조회) 
 function findUsers(req, res, next){
 	var userId = req.user.info.id;
 	
 	if(userId != 'root'){
 		res.status(400).json(new ResultModel('F', 'no Authority', null));
->>>>>>> 61d4d151596f2ff74b065428b3737f22ae2d5e04
 	} else {
 		next();
 	}
@@ -118,10 +116,7 @@ function modifyMemberInfo(req, res) {
 	var member = req.body;
 	// 조건문
 	var where = {where : {id : req.params.id}};
-<<<<<<< HEAD
-=======
 
->>>>>>> 61d4d151596f2ff74b065428b3737f22ae2d5e04
 	// 비동기 waterfall
 	async.waterfall([function(callback) {
 		// 아이디 존재 유무 확인
@@ -171,10 +166,7 @@ function modifyMemberInfo_authentic(req, res) {
 	// 조건문
 	var where = {where : {id : req.params.id}};
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 61d4d151596f2ff74b065428b3737f22ae2d5e04
 	// 비동기 waterfall
 	async.waterfall([function(callback) {
 		// 아이디 존재 유무 확인
@@ -283,6 +275,5 @@ function deleteMemberInfo(req,res){
 	});
 }
 
-
-
+module.exports = router;
 module.exports = router;

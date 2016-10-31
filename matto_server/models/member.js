@@ -11,11 +11,7 @@ module.exports = function(sequelize, DataTypes) {
 	    ndPwd : {type : DataTypes.STRING(15), allowNull : true},
 	    gender : {type : DataTypes.STRING(1), allowNull : false},
 	    phoneNum : {type : DataTypes.STRING(12), allowNull : false}, // 유니크
-<<<<<<< HEAD
-	    auth : {type : DataTypes.STRING(1), allowNull : true},
-=======
 		auth : {type : DataTypes.STRING(1), allowNull : true},
->>>>>>> 61d4d151596f2ff74b065428b3737f22ae2d5e04
 	    createdAt : {type : DataTypes.DATE, defaultValue: DataTypes.NOW},
 	    updatedAt : {type : DataTypes.DATE, defaultValue: DataTypes.NOW}
 	  }, {

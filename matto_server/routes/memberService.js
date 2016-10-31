@@ -41,7 +41,7 @@ router.get('/members/:id', auth.isAuthenticated(), findUsers, getMemberInfo);
 // 회원 정보 삭제 
 router.delete('/members/:id', deleteMemberInfo);
 
-
+// 테스트 주석 
 // 로그인-토큰획득
 function getAccessToken(req,res,next){
 		// custom callback

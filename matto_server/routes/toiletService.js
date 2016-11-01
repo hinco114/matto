@@ -28,11 +28,11 @@ var ResultModel = function(status, reason, data) {
 	this.resultData = data;
 };
 
-//관리자 권한검사 ( 현재는 root 계정만 권한 획득 ) 
+//관리자 권한검사
 function checkAuth(req, res, next){
-	var userId = req.user.info.id;
+	var rootAuth = req.user.info.auth;
 	
-	if(userId != 'root'){
+	if(rootAuth != 'M'){
 		res.status(400).json(new ResultModel('F', 'checkAuth. no Authority', null));
 	} else {
 		next();

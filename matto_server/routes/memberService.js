@@ -33,7 +33,7 @@ router.get('/members/me', auth.isAuthenticated(), getMyInfo);
 // 회원 정보 조회
 router.get('/members/:id', auth.isAuthenticated(), findAllUsers, getMemberInfo);
 // 회원 정보 전체 조회 관리자 *
-router.get('/members', auth.isAuthenticated(), findUsers, getAllMemberInfo);
+router.get('/members/master', auth.isAuthenticated(), findUsers, getAllMemberInfo);
 // 내 정보 조회 *
 router.get('/members/me', auth.isAuthenticated(), getMyInfo);
 // 회원 정보 조회 *
@@ -104,6 +104,7 @@ function registMember(req, res) {
 	var member = req.body;
 	member.salt = models.Member.createSalt();
 	member.pwd = models.Member.createHashPwd(member.pwd, member.salt);
+	member.ndPwd = models.Member.createHashPwd(member.ndPwd, member.salt);
 	models.Member.create(member).then(function() {
 		res.status(200).json(new ResultModel('S', 'Seccessfully Registered !'));
 	}, function(err) {

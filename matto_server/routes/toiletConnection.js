@@ -34,7 +34,7 @@ var commandRequest = function(info, cmd){
 };
 
 
-router.post('/:cmd/:beaconId',auth.isAuthenticated(), function(req, res) {
+router.post('/conn/:cmd',auth.isAuthenticated(), function(req, res) {
 	var info = req.body;
 	console.log(req.user);
 	var member = req.user.info;
@@ -46,11 +46,12 @@ router.post('/:cmd/:beaconId',auth.isAuthenticated(), function(req, res) {
 	
 	//async.waterfall 2차비밀번호 유효 확인 -> 화장실 정보 획득 -> 접근 권환 확인 -> 화장실에 전송
 	async.waterfall([ async.apply(matchPassword,member.id, cmdRq), getToiletInfo, validAccess, requestToilet],
-		function(err){
+		function(err, body){
 			if(err){
 				res.status(400).json(new ResultModel('F', err, null));
 			}else{
-				res.status(200).json(new ResultModel('S', null, null));
+				console.log("body : ",body);
+				res.status(200).json(new ResultModel('S', null, JSON.parse(body)));
 			}});
 });
 
@@ -101,15 +102,15 @@ function validAccess(cmdReq, callback){
 //화장실에 요청을 보낸다.
 function requestToilet(cmdReq, callback){
 	var ipAddr = cmdReq.getToilet().ipAddr;
-	var url = 'http://'+ipAddr+'/'+cmdReq.cmd;
+	var url = 'http://'+ipAddr+'/'+cmdReq.cmd+'?data='+cmdReq.getMember().gender;
 	request.get(url, function (err,resp,body){
 		console.log(body);
 		if(err){
 			callback(err.message);
-		}else if(body.status = 'F'){
+		}else if(body.status == 'F'){
 			callback(body.reason);
 		}else{
-			callback();
+			callback(null, body);
 		}
 	})
 };

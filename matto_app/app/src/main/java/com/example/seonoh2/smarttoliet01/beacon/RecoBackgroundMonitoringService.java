@@ -31,6 +31,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.seonoh2.smarttoliet01.R;
 import com.perples.recosdk.RECOBeacon;
@@ -199,7 +200,7 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
 
         //Get the region and found beacon list in the entered region
         Log.i("BackMonitoringService", "didEnterRegion() - " + region.getUniqueIdentifier());
-        this.popupNotification("Inside of " + region.getUniqueIdentifier());
+        this.popupNotification("MATTO회원님 스마트 화장실이 근방 50m 범위내에 있습니다." + region.getUniqueIdentifier());
         //Write the code when the device is enter the region
     }
 
@@ -214,7 +215,7 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
          */
 
         Log.i("BackMonitoringService", "didExitRegion() - " + region.getUniqueIdentifier());
-        this.popupNotification("Outside of " + region.getUniqueIdentifier());
+        this.popupNotification("MATTO회원님 스마트 화장실을 이용해주셔서 감사합니다.  " + region.getUniqueIdentifier());
         //Write the code when the device is exit the region
     }
 
@@ -222,6 +223,7 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
     public void didStartMonitoringForRegion(RECOBeaconRegion region) {
         Log.i("BackMonitoringService", "didStartMonitoringForRegion() - " + region.getUniqueIdentifier());
         //Write the code when starting monitoring the region is started successfully
+        Toast.makeText(getApplicationContext(),"비콘 모니터링 작동 성공 ",Toast.LENGTH_LONG).show();
     }
 
     private void popupNotification(String msg) {
@@ -255,6 +257,9 @@ public class RecoBackgroundMonitoringService extends Service implements RECOMoni
     public void monitoringDidFailForRegion(RECOBeaconRegion region, RECOErrorCode errorCode) {
         //Write the code when the RECOBeaconService is failed to monitor the region.
         //See the RECOErrorCode in the documents.
+
+        Toast.makeText(getApplicationContext(),"비콘 모니터링 작동 실패 ",Toast.LENGTH_LONG).show();
+
         return;
     }
 }

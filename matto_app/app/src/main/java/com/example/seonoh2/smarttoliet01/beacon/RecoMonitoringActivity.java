@@ -23,8 +23,10 @@
  */
 package com.example.seonoh2.smarttoliet01.beacon;
 
+import android.app.NotificationManager;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.ListView;
 
@@ -56,6 +58,7 @@ public class RecoMonitoringActivity extends RecoActivity implements RECOMonitori
      */
     private long mScanPeriod = 1*1000L;
     private long mSleepPeriod = 10*1000L;
+    private int mNotificationID = 9999;
 
     private boolean mInitialSetting = true;
 
@@ -119,6 +122,7 @@ public class RecoMonitoringActivity extends RecoActivity implements RECOMonitori
         Log.i("RecoMonitoringActivity", "didDetermineStateForRegion()");
         Log.i("RecoMonitoringActivity", "region: " + recoRegion.getUniqueIdentifier() + ", state: " + recoRegionState.toString());
 
+
         if(mInitialSetting) {
             mMonitoringListAdapter.updateRegion(recoRegion, recoRegionState, 0, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA).format(new Date()));
             mMonitoringListAdapter.notifyDataSetChanged();
@@ -140,6 +144,7 @@ public class RecoMonitoringActivity extends RecoActivity implements RECOMonitori
 
         //Get the region and found beacon list in the entered region
         Log.i("RecoMonitoringActivity", "didEnterRegion() region:" + recoRegion.getUniqueIdentifier());
+        this.popupNotification("Inside of 비콘 감지 팝업" + recoRegion.getUniqueIdentifier());
 
         mMonitoringListAdapter.updateRegion(recoRegion, RECOBeaconRegionState.RECOBeaconRegionInside, beacons.size(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA).format(new Date()));
         mMonitoringListAdapter.notifyDataSetChanged();
@@ -216,6 +221,20 @@ public class RecoMonitoringActivity extends RecoActivity implements RECOMonitori
         //Write the code when the RECOBeaconService is failed.
         //See the RECOErrorCode in the documents.
         return;
+    }
+
+    private void popupNotification(String msg) {
+        Log.i("BackRangingService", "popupNotification()");
+        String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.KOREA).format(new Date());
+        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle(msg + " " + currentTime)
+                .setContentText(msg);
+
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+        builder.setStyle(inboxStyle);
+        nm.notify(mNotificationID, builder.build());
+        mNotificationID = (mNotificationID - 1) % 1000 + 9000;
     }
 
     @Override

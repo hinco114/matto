@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_collapseMode="pin"
+        android:background="@color/cast_intro_overlay_background_color"
+        app:popupTheme="@style/AppTheme.PopupOverlay">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="18dp"
+                android:layout_marginEnd="28dp"
+                android:src="@drawable/toolbar_logo"
+                />
+        </FrameLayout>
+    </android.support.v7.widget.Toolbar>
+
+
+    <TextView
+        android:id="@+id/matto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MATTO (마또) : 마려우면 또오리\n 저희 MATTO를 사용해 주셔서 감사합니다.\n저희 MATTO는 안전성과 청결성은 높인 SMART 화장실입니다. "
+        android:layout_marginTop="15dp"
+        />
+
+
+    <TextView
+        android:id="@+id/matto_master"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="MATTO 팀장 : 윤 상현" />
+
+    <TextView
+        android:id="@+id/matto_android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="MATTO 안드로이드 개발자 : 엄 선오" />
+
+    <TextView
+        android:id="@+id/matto_server1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="MATTO 서버 개발자 : 최 한규" />
+
+    <TextView
+        android:id="@+id/matto_server2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="MATTO 서버 개발자 : 최 한규" />
+
+    <TextView
+        android:id="@+id/matto_android_disign"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="MATTO 디자이너 : 박 현기" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="뒤로"
+        android:id="@+id/btn_back"
+        android:layout_gravity="right"
+        android:layout_marginTop="150dp"/>
+</LinearLayout>

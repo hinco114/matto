@@ -1,36 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="한이음" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="공지사항" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="엄선오" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="설정" />
-    </group>
+  <group>
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/ic_launch_black_24dp"
+        android:title="로그아웃"/>
+    <item
+        android:id="@+id/nav_info_edit"
+        android:icon="@drawable/ic_person"
+        android:title="회원정보 수정"/>
+          <item
+              android:id="@+id/nav_notice"
+              android:icon="@drawable/ic_assignment_black_24dp"
+              android:title="공지사항"/>
+  </group>
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="필요" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="없는" />
-        </menu>
-    </item>
+  <group>
+    <item
+        android:id="@+id/nav_members"
+        android:icon="@drawable/ic_people_black_24dp"
+        android:title="참가 멤버"/>
+  </group>
 
 </menu>

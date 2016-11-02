@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.seonoh2.smarttoliet01.MainActivity">
+    tools:context="com.example.seonoh2.smarttoliet01.activities.MainActivity">
 
 
     <android.support.design.widget.AppBarLayout
@@ -20,8 +20,6 @@
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-
 
                 <ImageView
                     android:fitsSystemWindows="true"

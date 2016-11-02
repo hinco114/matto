@@ -24,13 +24,14 @@
 
 package com.example.seonoh2.smarttoliet01.beacon;
 
-import android.app.Activity;
-import android.net.Uri;
-import android.os.Bundle;
-
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+
 import com.perples.recosdk.RECOBeacon;
 import com.perples.recosdk.RECOBeaconManager;
 import com.perples.recosdk.RECOBeaconRegion;
@@ -46,7 +47,7 @@ import java.util.ArrayList;
  * RECOActivity 클래스는 RECOMonitoringActivity와 RECORangingActivity를 위한 기본 클래스 입니다.
  * Monitoring 이나 ranging을 단일 클래스로 구성하고 싶으시다면, 이 클래스를 삭제하시고 필요한 메소드와 RECOServiceConnectListener를 해당 클래스에서 구현하시기 바랍니다.
  */
-public abstract class RecoActivity extends Activity implements RECOServiceConnectListener {
+public abstract class RecoActivity extends AppCompatActivity implements RECOServiceConnectListener {
     protected RECOBeaconManager mRecoManager;
     protected ArrayList<RECOBeaconRegion> mRegions;
     private ArrayList<RECOBeacon> mRangedBeacons;
@@ -87,17 +88,23 @@ public abstract class RecoActivity extends Activity implements RECOServiceConnec
     private ArrayList<RECOBeaconRegion> generateBeaconRegion() {
         ArrayList<RECOBeaconRegion> regions = new ArrayList<RECOBeaconRegion>();
 
-        RECOBeaconRegion recoRegion;
-
-
-
-
-        int mMajor1 = 100;
-        int mMinor1 = 1;
-
+//        RECOBeaconRegion recoRegion;
         String RECO_UUID = "24DDF411-8CF1-440C-87CD-E368DAF9C93E";
 
-        recoRegion = new RECOBeaconRegion(RECO_UUID, mMajor1, mMinor1, "엄선오 Test");
+
+
+//        int mMajor1 = 100;
+//        int mMajor2 = 501;
+//        int mMajor3 = 501;
+//
+//        int mMinor1 = 1;
+//        int mMinor2 = 20261;
+//        int mMinor3 = 20262;
+
+
+        RECOBeaconRegion recoRegion1 = new RECOBeaconRegion(RECO_UUID, "엄선오 beacon test  1");
+        RECOBeaconRegion recoRegion2 = new RECOBeaconRegion(RECO_UUID,   "엄선오 beacon test 20261");
+        RECOBeaconRegion recoRegion3 = new RECOBeaconRegion(RECO_UUID,  "엄선오 beacon test 20262");
 
 
 
@@ -107,7 +114,10 @@ public abstract class RecoActivity extends Activity implements RECOServiceConnec
 //        recoRegion = new RECOBeaconRegion(BeaconMainActivity.RECO_UUID, "엄선오자리");
 
 
-        regions.add(recoRegion);
+        regions.add(recoRegion1);
+        regions.add(recoRegion2);
+        regions.add(recoRegion3);
+
 
         return regions;
     }

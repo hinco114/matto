@@ -1,13 +1,18 @@
 package com.example.seonoh2.smarttoliet01.manager;
 
+import com.google.gson.Gson;
+
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
-import com.example.seonoh2.smarttoliet01.MyApplication;
+import com.example.seonoh2.smarttoliet01.data.AitemResult;
+import com.example.seonoh2.smarttoliet01.data.LoginResult;
 import com.example.seonoh2.smarttoliet01.data.SignUpResult;
-import com.google.gson.Gson;
+import com.example.seonoh2.smarttoliet01.data.Toilet;
+import com.example.seonoh2.smarttoliet01.util.MyApplication;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,8 +33,8 @@ import okhttp3.Response;
 /**
  * Created by 선오 on 2016-08-19.
  */
-public class NetworkManager  {
-        private static NetworkManager instance;
+public class NetworkManager {
+    private static NetworkManager instance;
 
     public static NetworkManager getInstance() {
         if (instance == null) {
@@ -103,9 +108,10 @@ public class NetworkManager  {
 
     private static final String SMART_TOLIET_SEVER = "http://14.63.226.110:3000";
 
-       /*회원가입*/
+    /*회원가입*/
     private static final String SMART_TOLIET_SIGNUP = SMART_TOLIET_SEVER + "/api/0.1v/members";
-    public Request getUserSignUp( String id , String pwd, String ndPwd, String gender, String phoneNum, OnResultListener<SignUpResult> listener) {
+
+    public Request getUserSignUp(String id, String pwd, String ndPwd, String gender, String phoneNum, OnResultListener<SignUpResult> listener) {
         String url = SMART_TOLIET_SIGNUP;
 
         RequestBody body = new FormBody.Builder()
@@ -126,6 +132,7 @@ public class NetworkManager  {
         result.request = request;
         result.listener = listener;
         mClient.newCall(request).enqueue(new Callback() {
+
             @Override
             public void onFailure(Call call, IOException e) {
                 result.excpetion = e;
@@ -138,6 +145,7 @@ public class NetworkManager  {
                 if (response.isSuccessful()) {
                     SignUpResult data = gson.fromJson(text, SignUpResult.class);
                     result.result = data;
+                    Log.e("SharedPrefUtil", "onResponse: " + data.getStatus());
                     mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_SUCCESS, result));
                 } else {
                     result.excpetion = new IOException(response.message());
@@ -149,53 +157,128 @@ public class NetworkManager  {
     }
 
 
-    //Login
-
-//    private static final String SMART_TOLIET_LOGIN = SMART_TOLIET_SEVER + "/api/0.1v/login";
-//    public Request getUserLogin( String id , String pwd OnResultListener<LoginResult> listener) {
-//        String url = SMART_TOLIET_LOGIN;
-//
-//        RequestBody body = new FormBody.Builder()
-//                .add("id", id)
-//                .add("pwd", pwd)
-////                .add("ndPwd", ndPwd)
-////                .add("gender", gender)
-////                .add("phoneNum", phoneNum)
-//                .build();
-//
-//
-//
-//        Request request = new Request.Builder()
-//                .head()
-//                .url(url)
-//                .post(body)
-//                .build();
-//
-//        final NetworkResult<LoginResult> result = new NetworkResult<>();
-//        result.request = request;
-//        result.listener = listener;
-//        mClient.newCall(request).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                result.excpetion = e;
-//                mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_FAIL, result)); //왜실패했는지
-//            }
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                String text = response.body().string();
-//                if (response.isSuccessful()) {
-//                    LoginResult data = gson.fromJson(text, LoginResult.class);
-//                    result.result = data;
-//                    mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_SUCCESS, result));
-//                } else {
-//                    result.excpetion = new IOException(response.message());
-//                    mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_FAIL, result));
-//                }
-//            }
-//        });
-//        return request;
+//    public String getAitemSn() {
+//        aitemSn="0";
+//        return aitemSn;
 //    }
+
+    private static final String SMART_TOLIET_AITEM = SMART_TOLIET_SEVER + "/api/0.1v/products";
+    public Request getUserAitem( OnResultListener<AitemResult> listener) {
+
+        String url = SMART_TOLIET_AITEM + "?offset=0";
+
+        Request request = new Request.Builder()
+                .get()
+                .url(url)
+                .build();
+
+        final NetworkResult<AitemResult> result = new NetworkResult<>();
+        result.request = request;
+        result.listener = listener;
+        mClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                result.excpetion = e;
+                mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_FAIL, result)); //왜실패했는지
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String text = response.body().string();
+                if (response.isSuccessful()) {
+                    AitemResult data = gson.fromJson(text, AitemResult.class);
+                    result.result = data;
+                    mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_SUCCESS, result));
+                } else {
+                    result.excpetion = new IOException(response.message());
+                    mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_FAIL, result));
+                }
+            }
+        });
+        return request;
+    }
+
+//화장실 정보 -한규형
+
+    private static final String SMART_TOLIET_TOILET = "http://192.168.25.16:3000/api/0.1v/toiletTest";
+
+    public Request getUserToilet(OnResultListener<Toilet> listener) {
+        String url = "http://192.168.25.16:3000/api/0.1v/toiletTest";
+
+        Request request = new Request.Builder()
+                .header("toiletIdx", "6")
+                .url(url)
+//                .post(body)
+                .build();
+
+        final NetworkResult<Toilet> result = new NetworkResult<>();
+        result.request = request;
+        result.listener = listener;
+        mClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                result.excpetion = e;
+                mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_FAIL, result)); //왜실패했는지
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String text = response.body().string();
+                if (response.isSuccessful()) {
+                    Toilet data = gson.fromJson(text, Toilet.class);
+                    result.result = data;
+                    mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_SUCCESS, result));
+                } else {
+                    result.excpetion = new IOException(response.message());
+                    mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_FAIL, result));
+                }
+            }
+        });
+        return request;
+    }
+
+    /*로그인*/
+    private static final String SMART_TOLIET_LOGIN = SMART_TOLIET_SEVER + "/api/0.1v/login";
+
+    public Request getUserLogin(String id, String pwd, OnResultListener<LoginResult> listener) {
+        String url = SMART_TOLIET_LOGIN;
+
+        RequestBody body = new FormBody.Builder()
+                .add("id", id)
+                .add("pwd", pwd)
+                .build();
+
+        Request request = new Request.Builder()
+                .header("access_token",PropertyManager.getInstance().getAccess_token())
+                .url(url)
+                .post(body)
+                .build();
+
+        final NetworkResult<LoginResult> result = new NetworkResult<>();
+        result.request = request;
+        result.listener = listener;
+        mClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                result.excpetion = e;
+                mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_FAIL, result)); //왜실패했는지
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String text = response.body().string();
+                if (response.isSuccessful()) {
+                    LoginResult data = gson.fromJson(text, LoginResult.class);
+                    result.result = data;
+                    mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_SUCCESS, result));
+                } else {
+                    result.excpetion = new IOException(response.message());
+                    mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_FAIL, result));
+                }
+            }
+        });
+        return request;
+    }
 
 
 }

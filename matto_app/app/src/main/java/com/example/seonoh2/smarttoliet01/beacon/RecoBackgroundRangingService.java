@@ -30,6 +30,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.seonoh2.smarttoliet01.R;
 import com.perples.recosdk.RECOBeacon;
@@ -233,7 +234,7 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
 
         //Get the region and found beacon list in the entered region
         Log.i("BackRangingService", "didEnterRegion() - " + region.getUniqueIdentifier());
-        this.popupNotification("Inside of " + region.getUniqueIdentifier());
+        this.popupNotification("Inside of 비콘 감지 팝업" + region.getUniqueIdentifier());
         //Write the code when the device is enter the region
 
         this.startRangingWithRegion(region); //start ranging to get beacons inside of the region
@@ -251,7 +252,7 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
          */
 
         Log.i("BackRangingService", "didExitRegion() - " + region.getUniqueIdentifier());
-        this.popupNotification("Outside of " + region.getUniqueIdentifier());
+        this.popupNotification("Outside of 비콘 감지 팝업 " + region.getUniqueIdentifier());
         //Write the code when the device is exit the region
 
         this.stopRangingWithRegion(region); //stop ranging because the device is outside of the region from now
@@ -267,6 +268,7 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
     public void didRangeBeaconsInRegion(Collection<RECOBeacon> beacons, RECOBeaconRegion region) {
         Log.i("BackRangingService", "didRangeBeaconsInRegion() - " + region.getUniqueIdentifier() + " with " + beacons.size() + " beacons");
         //Write the code when the beacons inside of the region is received
+        Toast.makeText(getApplicationContext(),"비콘이 감지되었습니다",Toast.LENGTH_LONG).show();
     }
 
     private void popupNotification(String msg) {
@@ -307,6 +309,9 @@ public class RecoBackgroundRangingService extends Service implements RECORanging
     public void rangingBeaconsDidFailForRegion(RECOBeaconRegion region, RECOErrorCode errorCode) {
         //Write the code when the RECOBeaconService is failed to range beacons in the region.
         //See the RECOErrorCode in the documents.
+
+        Toast.makeText(getApplicationContext(),"비콘 랜징 실패",Toast.LENGTH_LONG).show();
+
         return;
     }
 }

@@ -110,7 +110,7 @@ public class RecoRangingListAdapter extends BaseAdapter {
         viewHolder.recoTxPower.setText(recoBeacon.getTxPower() + "");
         viewHolder.recoRssi.setText(recoBeacon.getRssi() + "");
         viewHolder.recoProximity.setText(recoBeacon.getProximity() + "");
-        if(recoBeacon.getAccuracy() <= 0.5 ){
+        if(recoBeacon.getAccuracy() <= 4){
         viewHolder.recoAccuracy.setText(String.format("%.2f ", recoBeacon.getAccuracy()  ));}
         else {
             viewHolder.recoAccuracy.setText(String.format("사용할 수 없는 비콘 "  ));
